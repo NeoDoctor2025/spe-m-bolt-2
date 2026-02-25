@@ -41,50 +41,50 @@ export function classNames(...classes: (string | boolean | undefined | null)[]):
 }
 
 export function getScoreColor(score: number, maxScore: number): string {
-  if (maxScore === 0) return 'text-slate-400';
+  if (maxScore === 0) return 'text-editorial-muted';
   const pct = (score / maxScore) * 100;
-  if (pct >= 80) return 'text-emerald-400';
-  if (pct >= 50) return 'text-amber-400';
-  return 'text-red-400';
+  if (pct >= 80) return 'text-editorial-sage';
+  if (pct >= 50) return 'text-editorial-gold';
+  return 'text-editorial-rose';
 }
 
 export function getScoreBgColor(score: number, maxScore: number): string {
-  if (maxScore === 0) return 'bg-slate-700';
+  if (maxScore === 0) return 'bg-editorial-cream';
   const pct = (score / maxScore) * 100;
-  if (pct >= 80) return 'bg-emerald-500/20';
-  if (pct >= 50) return 'bg-amber-500/20';
-  return 'bg-red-500/20';
+  if (pct >= 80) return 'bg-editorial-sage/20';
+  if (pct >= 50) return 'bg-editorial-gold/20';
+  return 'bg-editorial-rose/20';
 }
 
 export function getStatusColor(status: string): string {
   switch (status) {
     case 'Concluído':
-      return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      return 'bg-editorial-sage-light text-editorial-sage border-editorial-sage/20';
     case 'Em Andamento':
-      return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+      return 'bg-editorial-gold/10 text-editorial-gold-dark border-editorial-gold/20';
     case 'Pendente':
-      return 'bg-red-500/10 text-red-400 border-red-500/20';
+      return 'bg-editorial-rose-light text-editorial-rose border-editorial-rose/20';
     case 'Ativo':
-      return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      return 'bg-editorial-sage-light text-editorial-sage border-editorial-sage/20';
     case 'Inativo':
-      return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+      return 'bg-editorial-cream/60 text-editorial-muted border-editorial-warm/30';
     default:
-      return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+      return 'bg-editorial-cream/60 text-editorial-muted border-editorial-warm/30';
   }
 }
 
 export function getClassificationColor(cls: string): string {
   switch (cls) {
     case 'I':
-      return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      return 'bg-editorial-sage-light text-editorial-sage border-editorial-sage/20';
     case 'II':
-      return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+      return 'bg-editorial-navy/8 text-editorial-navy border-editorial-navy/15';
     case 'III':
-      return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+      return 'bg-editorial-gold/10 text-editorial-gold-dark border-editorial-gold/20';
     case 'IV':
-      return 'bg-red-500/10 text-red-400 border-red-500/20';
+      return 'bg-editorial-rose-light text-editorial-rose border-editorial-rose/20';
     default:
-      return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+      return 'bg-editorial-cream/60 text-editorial-muted border-editorial-warm/30';
   }
 }
 

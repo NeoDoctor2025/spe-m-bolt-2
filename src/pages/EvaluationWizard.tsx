@@ -115,7 +115,7 @@ export default function EvaluationWizard() {
   if (!currentEvaluation) {
     return (
       <div className="text-center py-20">
-        <p className="text-slate-400">Avaliacao nao encontrada</p>
+        <p className="text-editorial-muted">Avaliacao nao encontrada</p>
         <Button variant="secondary" className="mt-4" onClick={() => navigate('/evaluations')}>
           Voltar
         </Button>
@@ -128,12 +128,12 @@ export default function EvaluationWizard() {
 
   return (
     <div className="animate-fade-in">
-      <div className="sticky top-16 z-30 bg-slate-950/95 backdrop-blur-sm -mx-4 lg:-mx-6 px-4 lg:px-6 py-4 border-b border-slate-800 mb-6">
+      <div className="sticky top-16 z-30 bg-editorial-paper/95 backdrop-blur-sm -mx-4 lg:-mx-6 px-4 lg:px-6 py-4 border-b border-editorial-cream mb-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(-1)}
-              className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-lg text-editorial-muted hover:text-editorial-navy hover:bg-editorial-cream/40 transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
             </button>
@@ -141,8 +141,8 @@ export default function EvaluationWizard() {
               <div className="flex items-center gap-3">
                 <Avatar name={patient.full_name} size="sm" />
                 <div>
-                  <p className="text-sm font-medium text-slate-200">{patient.full_name}</p>
-                  <p className="text-xs text-slate-500">{formatCPF(patient.cpf)}</p>
+                  <p className="text-sm font-medium text-editorial-navy">{patient.full_name}</p>
+                  <p className="text-xs text-editorial-muted">{formatCPF(patient.cpf)}</p>
                 </div>
                 <Badge variant={getClassificationBadgeVariant(patient.classification)}>
                   Classe {patient.classification}
@@ -171,8 +171,8 @@ export default function EvaluationWizard() {
           {step && (
             <>
               <div className="mb-4">
-                <h2 className="text-xl font-bold text-slate-50">{step.title}</h2>
-                <p className="text-sm text-slate-400 mt-1">{step.description}</p>
+                <h2 className="text-xl font-bold font-serif text-editorial-navy">{step.title}</h2>
+                <p className="text-sm text-editorial-muted mt-1">{step.description}</p>
               </div>
 
               {step.criteria.map((criterion) => (
@@ -193,7 +193,7 @@ export default function EvaluationWizard() {
                 </Card>
               )}
 
-              <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-between pt-4 border-t border-editorial-cream">
                 <Button
                   variant="secondary"
                   onClick={handlePrev}
@@ -238,17 +238,17 @@ export default function EvaluationWizard() {
         maxWidth="max-w-xl"
       >
         <div className="space-y-4 mt-4">
-          <div className="bg-slate-800/50 rounded-lg p-4">
+          <div className="bg-editorial-cream/50 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm text-slate-400">Score Total</span>
-              <span className="text-2xl font-bold text-slate-100">
+              <span className="text-sm text-editorial-muted">Score Total</span>
+              <span className="text-2xl font-bold font-serif text-editorial-navy">
                 {getTotalMaxScore() > 0
                   ? Math.round((getTotalScore() / getTotalMaxScore()) * 100)
                   : 0}
                 %
               </span>
             </div>
-            <div className="text-sm text-slate-500">
+            <div className="text-sm text-editorial-muted">
               {getTotalScore()} de {getTotalMaxScore()} pontos
             </div>
           </div>
@@ -258,13 +258,13 @@ export default function EvaluationWizard() {
             const max = getStepMaxScore(s.id);
             return (
               <div key={s.id} className="flex items-center justify-between text-sm">
-                <span className="text-slate-400">{s.title}</span>
-                <span className="text-slate-200 font-medium">{score}/{max}</span>
+                <span className="text-editorial-muted">{s.title}</span>
+                <span className="text-editorial-navy font-medium">{score}/{max}</span>
               </div>
             );
           })}
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-editorial-cream">
             <Button variant="secondary" onClick={() => setShowComplete(false)}>
               Revisar
             </Button>

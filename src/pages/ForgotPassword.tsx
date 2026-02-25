@@ -37,7 +37,7 @@ export default function ForgotPassword() {
       <div>
         <Link
           to="/login"
-          className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-300 transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm text-editorial-muted hover:text-editorial-navy transition-colors mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar ao login
@@ -45,11 +45,11 @@ export default function ForgotPassword() {
 
         {sent ? (
           <div className="text-center py-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/10 mb-4">
-              <CheckCircle2 className="h-8 w-8 text-emerald-400" />
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-editorial-sage-light mb-4">
+              <CheckCircle2 className="h-8 w-8 text-editorial-sage" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-50 mb-2">E-mail Enviado</h2>
-            <p className="text-sm text-slate-400 max-w-sm mx-auto">
+            <h2 className="text-2xl font-bold font-serif text-editorial-navy mb-2">E-mail Enviado</h2>
+            <p className="text-sm text-editorial-muted max-w-sm mx-auto">
               Verifique sua caixa de entrada para redefinir sua senha. O link expira em 24 horas.
             </p>
             <Link to="/login">
@@ -60,8 +60,8 @@ export default function ForgotPassword() {
           </div>
         ) : (
           <>
-            <h2 className="text-2xl font-bold text-slate-50 mb-1">Recuperar Senha</h2>
-            <p className="text-sm text-slate-400 mb-8">
+            <h2 className="text-2xl font-bold font-serif text-editorial-navy mb-1">Recuperar Senha</h2>
+            <p className="text-sm text-editorial-muted mb-8">
               Informe seu e-mail para receber o link de recuperacao
             </p>
 

@@ -21,13 +21,13 @@ import { CardSkeleton } from '../components/ui/Skeleton';
 import { supabase } from '../lib/supabase';
 import { EVALUATION_STEPS } from '../data/evaluationCriteria';
 
-const PIE_COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
+const PIE_COLORS = ['#1A2B48', '#C5A059', '#8A8477', '#3D5A80'];
 
 const tooltipStyle = {
-  backgroundColor: '#1e293b',
-  border: '1px solid #334155',
+  backgroundColor: '#FAF9F7',
+  border: '1px solid #E8E6E1',
   borderRadius: '0.5rem',
-  color: '#f1f5f9',
+  color: '#1A2B48',
   fontSize: '0.875rem',
 };
 
@@ -63,7 +63,7 @@ export default function Analytics() {
     const evals = evalsData ?? [];
 
     const total = evals.length;
-    const completed = evals.filter((e) => e.status === 'Concluído');
+    const completed = evals.filter((e) => e.status === 'Concluido');
     const avgScore =
       completed.length > 0
         ? Math.round(
@@ -170,8 +170,8 @@ export default function Analytics() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-50">Relatorios e Estatisticas</h1>
-          <p className="text-sm text-slate-400 mt-1">Analise detalhada das avaliacoes</p>
+          <h1 className="text-2xl font-bold font-serif text-editorial-navy">Relatorios e Estatisticas</h1>
+          <p className="text-sm text-editorial-muted mt-1">Analise detalhada das avaliacoes</p>
         </div>
         <div className="flex items-center gap-3">
           <Input
@@ -180,7 +180,7 @@ export default function Analytics() {
             onChange={(e) => setDateFrom(e.target.value)}
             className="w-40"
           />
-          <span className="text-slate-500 text-sm">ate</span>
+          <span className="text-editorial-muted text-sm">ate</span>
           <Input
             type="date"
             value={dateTo}
@@ -192,10 +192,10 @@ export default function Analytics() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { icon: BarChart3, label: 'Total Avaliacoes', value: stats.total, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-          { icon: TrendingUp, label: 'Score Medio', value: `${stats.avgScore}%`, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-          { icon: CheckCircle2, label: 'Concluidas', value: stats.completedCount, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-          { icon: Award, label: 'Maior Score', value: `${stats.highest}%`, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+          { icon: BarChart3, label: 'Total Avaliacoes', value: stats.total, color: 'text-editorial-gold', bg: 'bg-editorial-gold/10' },
+          { icon: TrendingUp, label: 'Score Medio', value: `${stats.avgScore}%`, color: 'text-editorial-sage', bg: 'bg-editorial-sage-light' },
+          { icon: CheckCircle2, label: 'Concluidas', value: stats.completedCount, color: 'text-editorial-gold-dark', bg: 'bg-editorial-gold/10' },
+          { icon: Award, label: 'Maior Score', value: `${stats.highest}%`, color: 'text-editorial-sage', bg: 'bg-editorial-sage-light' },
         ].map((card) => (
           <Card key={card.label}>
             <div className="flex items-center gap-3">
@@ -203,8 +203,8 @@ export default function Analytics() {
                 <card.icon className={`h-5 w-5 ${card.color}`} />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-50">{card.value}</p>
-                <p className="text-sm text-slate-400">{card.label}</p>
+                <p className="text-2xl font-bold font-serif text-editorial-navy">{card.value}</p>
+                <p className="text-sm text-editorial-muted">{card.label}</p>
               </div>
             </div>
           </Card>
@@ -213,21 +213,21 @@ export default function Analytics() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardTitle>Avaliacoes ao Longo do Tempo</CardTitle>
+          <CardTitle className="font-serif">Avaliacoes ao Longo do Tempo</CardTitle>
           <CardDescription>Quantidade de avaliacoes por mes</CardDescription>
           <div className="h-72 mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={lineData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
-                <YAxis stroke="#64748b" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E8E6E1" />
+                <XAxis dataKey="month" stroke="#8A8477" fontSize={12} />
+                <YAxis stroke="#8A8477" fontSize={12} />
                 <Tooltip contentStyle={tooltipStyle} />
                 <Line
                   type="monotone"
                   dataKey="count"
-                  stroke="#3b82f6"
+                  stroke="#C5A059"
                   strokeWidth={2}
-                  dot={{ fill: '#3b82f6', r: 4 }}
+                  dot={{ fill: '#C5A059', r: 4 }}
                   name="Avaliacoes"
                 />
               </LineChart>
@@ -236,12 +236,12 @@ export default function Analytics() {
         </Card>
 
         <Card>
-          <CardTitle>Distribuicao por Classificacao</CardTitle>
+          <CardTitle className="font-serif">Distribuicao por Classificacao</CardTitle>
           <CardDescription>Pacientes por classe de risco</CardDescription>
           <div className="h-72 mt-4">
             {pieData.length === 0 ? (
               <div className="flex items-center justify-center h-full">
-                <p className="text-sm text-slate-500">Sem dados</p>
+                <p className="text-sm text-editorial-muted">Sem dados</p>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
@@ -262,7 +262,7 @@ export default function Analytics() {
                   </Pie>
                   <Tooltip contentStyle={tooltipStyle} />
                   <Legend
-                    formatter={(value) => <span className="text-sm text-slate-400">{value}</span>}
+                    formatter={(value) => <span className="text-sm text-editorial-muted">{value}</span>}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -271,16 +271,16 @@ export default function Analytics() {
         </Card>
 
         <Card className="lg:col-span-2">
-          <CardTitle>Scores por Criterio</CardTitle>
+          <CardTitle className="font-serif">Scores por Criterio</CardTitle>
           <CardDescription>Pontuacao media por etapa de avaliacao (%)</CardDescription>
           <div className="h-72 mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={barData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis type="number" domain={[0, 100]} stroke="#64748b" fontSize={12} />
-                <YAxis dataKey="name" type="category" width={140} stroke="#64748b" fontSize={12} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E8E6E1" />
+                <XAxis type="number" domain={[0, 100]} stroke="#8A8477" fontSize={12} />
+                <YAxis dataKey="name" type="category" width={140} stroke="#8A8477" fontSize={12} />
                 <Tooltip contentStyle={tooltipStyle} formatter={(value) => [`${value}%`, 'Score']} />
-                <Bar dataKey="score" fill="#3b82f6" radius={[0, 4, 4, 0]} barSize={24} />
+                <Bar dataKey="score" fill="#C5A059" radius={[0, 4, 4, 0]} barSize={24} />
               </BarChart>
             </ResponsiveContainer>
           </div>

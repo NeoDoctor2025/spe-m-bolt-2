@@ -39,7 +39,7 @@ export function AnatomicalCanvas() {
     operations.forEach((op) => {
       if (op.points.length < 2) return;
       ctx.beginPath();
-      ctx.strokeStyle = op.type === 'eraser' ? '#0f172a' : op.color;
+      ctx.strokeStyle = op.type === 'eraser' ? '#FAF9F7' : op.color;
       ctx.lineWidth = op.type === 'eraser' ? op.width * 3 : op.width;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
@@ -86,7 +86,7 @@ export function AnatomicalCanvas() {
     const pts = currentOp.current.points;
     if (pts.length < 2) return;
     ctx.beginPath();
-    ctx.strokeStyle = tool === 'eraser' ? '#0f172a' : color;
+    ctx.strokeStyle = tool === 'eraser' ? '#FAF9F7' : color;
     ctx.lineWidth = tool === 'eraser' ? lineWidth * 3 : lineWidth;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -129,8 +129,8 @@ export function AnatomicalCanvas() {
   }, [operations, redrawCanvas]);
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-900/50">
+    <div className="bg-editorial-light border border-editorial-cream rounded-lg overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-editorial-cream bg-editorial-light-hover">
         <div className="flex items-center gap-2">
           <Button
             variant={tool === 'pen' ? 'primary' : 'ghost'}
@@ -147,30 +147,30 @@ export function AnatomicalCanvas() {
             <Eraser className="h-3.5 w-3.5" />
           </Button>
 
-          <div className="w-px h-6 bg-slate-700 mx-1" />
+          <div className="w-px h-6 bg-editorial-cream mx-1" />
 
           {COLORS.map((c) => (
             <button
               key={c}
               onClick={() => { setColor(c); setTool('pen'); }}
               className={`w-6 h-6 rounded-full border-2 transition-all ${
-                color === c && tool === 'pen' ? 'border-white scale-110' : 'border-slate-600'
+                color === c && tool === 'pen' ? 'border-editorial-navy scale-110' : 'border-editorial-warm'
               }`}
               style={{ backgroundColor: c }}
             />
           ))}
 
-          <div className="w-px h-6 bg-slate-700 mx-1" />
+          <div className="w-px h-6 bg-editorial-cream mx-1" />
 
           {LINE_WIDTHS.map((w) => (
             <button
               key={w}
               onClick={() => setLineWidth(w)}
               className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${
-                lineWidth === w ? 'bg-slate-700' : 'hover:bg-slate-800'
+                lineWidth === w ? 'bg-editorial-cream' : 'hover:bg-editorial-cream/40'
               }`}
             >
-              <div className="rounded-full bg-slate-300" style={{ width: w * 2, height: w * 2 }} />
+              <div className="rounded-full bg-editorial-navy-light" style={{ width: w * 2, height: w * 2 }} />
             </button>
           ))}
         </div>
@@ -188,7 +188,7 @@ export function AnatomicalCanvas() {
         </div>
       </div>
 
-      <div className="bg-slate-950 cursor-crosshair">
+      <div className="bg-editorial-paper cursor-crosshair">
         <canvas
           ref={canvasRef}
           onMouseDown={handleMouseDown}
@@ -203,7 +203,7 @@ export function AnatomicalCanvas() {
 }
 
 function drawBodyOutline(ctx: CanvasRenderingContext2D, w: number, h: number) {
-  ctx.strokeStyle = '#334155';
+  ctx.strokeStyle = '#D4CFC5';
   ctx.lineWidth = 1.5;
   ctx.setLineDash([4, 4]);
 
@@ -256,7 +256,7 @@ function drawBodyOutline(ctx: CanvasRenderingContext2D, w: number, h: number) {
 
   ctx.setLineDash([]);
 
-  ctx.fillStyle = '#334155';
+  ctx.fillStyle = '#8A8477';
   ctx.font = '11px Inter, sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('Marque as areas de interesse', cx, h - 10);

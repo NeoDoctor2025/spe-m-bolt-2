@@ -28,14 +28,14 @@ export default function Register() {
   const password = watch('password', '');
 
   const getPasswordStrength = (): { level: number; label: string; color: string } => {
-    if (!password) return { level: 0, label: '', color: 'bg-slate-700' };
+    if (!password) return { level: 0, label: '', color: 'bg-editorial-cream' };
     let strength = 0;
     if (password.length >= 8) strength++;
     if (/[A-Z]/.test(password)) strength++;
     if (/[0-9]/.test(password)) strength++;
     if (/[^A-Za-z0-9]/.test(password)) strength++;
     const labels = ['Fraca', 'Fraca', 'Media', 'Forte', 'Excelente'];
-    const colors = ['bg-red-500', 'bg-red-500', 'bg-amber-500', 'bg-emerald-500', 'bg-emerald-400'];
+    const colors = ['bg-editorial-rose', 'bg-editorial-rose', 'bg-editorial-gold', 'bg-editorial-sage', 'bg-editorial-sage'];
     return { level: strength, label: labels[strength], color: colors[strength] };
   };
 
@@ -67,8 +67,8 @@ export default function Register() {
   return (
     <AuthLayout>
       <div>
-        <h2 className="text-2xl font-bold text-slate-50 mb-1">Criar Conta</h2>
-        <p className="text-sm text-slate-400 mb-8">
+        <h2 className="text-2xl font-bold font-serif text-editorial-navy mb-1">Criar Conta</h2>
+        <p className="text-sm text-editorial-muted mb-8">
           Registre-se para acessar a plataforma
         </p>
 
@@ -110,7 +110,7 @@ export default function Register() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-[38px] text-slate-500 hover:text-slate-300 transition-colors"
+              className="absolute right-3 top-[38px] text-editorial-muted hover:text-editorial-navy transition-colors"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -123,13 +123,13 @@ export default function Register() {
                   <div
                     key={i}
                     className={`h-1 flex-1 rounded-full transition-colors ${
-                      i <= passwordStrength.level ? passwordStrength.color : 'bg-slate-700'
+                      i <= passwordStrength.level ? passwordStrength.color : 'bg-editorial-cream'
                     }`}
                   />
                 ))}
               </div>
-              <p className="text-xs text-slate-500">
-                Forca: <span className="text-slate-400">{passwordStrength.label}</span>
+              <p className="text-xs text-editorial-muted">
+                Forca: <span className="text-editorial-navy">{passwordStrength.label}</span>
               </p>
             </div>
           )}
@@ -149,9 +149,9 @@ export default function Register() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-slate-500 mt-6">
+        <p className="text-center text-sm text-editorial-muted mt-6">
           Ja tem uma conta?{' '}
-          <Link to="/login" className="text-blue-500 hover:text-blue-400 transition-colors font-medium">
+          <Link to="/login" className="text-editorial-gold hover:text-editorial-gold-dark transition-colors font-medium">
             Entrar
           </Link>
         </p>

@@ -61,7 +61,7 @@ export default function PatientDetail() {
   if (!patient) {
     return (
       <div className="text-center py-20">
-        <p className="text-slate-400">Paciente nao encontrado</p>
+        <p className="text-editorial-muted">Paciente nao encontrado</p>
         <Button variant="secondary" className="mt-4" onClick={() => navigate('/patients')}>
           Voltar
         </Button>
@@ -76,7 +76,7 @@ export default function PatientDetail() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate('/patients')}
-          className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+          className="p-2 rounded-lg text-editorial-muted hover:text-editorial-navy hover:bg-editorial-cream/40 transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
@@ -85,13 +85,13 @@ export default function PatientDetail() {
             <Avatar name={patient.full_name} size="xl" />
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-slate-50">{patient.full_name}</h1>
+                <h1 className="text-2xl font-bold font-serif text-editorial-navy">{patient.full_name}</h1>
                 <Badge variant={getClassificationBadgeVariant(patient.classification)}>
                   Classe {patient.classification}
                 </Badge>
                 <Badge variant={getStatusBadgeVariant(patient.status)}>{patient.status}</Badge>
               </div>
-              <p className="text-sm text-slate-400 mt-1 font-mono">{formatCPF(patient.cpf)}</p>
+              <p className="text-sm text-editorial-muted mt-1 font-mono">{formatCPF(patient.cpf)}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -108,7 +108,7 @@ export default function PatientDetail() {
       </div>
 
       <Tabs.Root defaultValue="overview" className="space-y-4">
-        <Tabs.List className="flex gap-1 border-b border-slate-800 pb-px">
+        <Tabs.List className="flex gap-1 border-b border-editorial-cream pb-px">
           {[
             { value: 'overview', label: 'Visao Geral' },
             { value: 'history', label: 'Historico' },
@@ -116,7 +116,7 @@ export default function PatientDetail() {
             <Tabs.Trigger
               key={tab.value}
               value={tab.value}
-              className="px-4 py-2.5 text-sm font-medium text-slate-500 border-b-2 border-transparent transition-colors data-[state=active]:text-blue-400 data-[state=active]:border-blue-400 hover:text-slate-300 focus-ring rounded-t-lg"
+              className="px-4 py-2.5 text-sm font-medium text-editorial-muted border-b-2 border-transparent transition-colors data-[state=active]:text-editorial-gold data-[state=active]:border-editorial-gold hover:text-editorial-navy/80 focus-ring rounded-t-lg"
             >
               {tab.label}
             </Tabs.Trigger>
@@ -126,7 +126,7 @@ export default function PatientDetail() {
         <Tabs.Content value="overview" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
-              <CardTitle className="text-base">Informacoes Pessoais</CardTitle>
+              <CardTitle className="text-base font-serif">Informacoes Pessoais</CardTitle>
               <div className="mt-4 space-y-3">
                 <InfoRow icon={<Calendar className="h-4 w-4" />} label="Nascimento" value={formatDate(patient.date_of_birth)} />
                 <InfoRow icon={<FileText className="h-4 w-4" />} label="Genero" value={patient.gender} />
@@ -136,7 +136,7 @@ export default function PatientDetail() {
             </Card>
 
             <Card>
-              <CardTitle className="text-base">Endereco</CardTitle>
+              <CardTitle className="text-base font-serif">Endereco</CardTitle>
               <div className="mt-4 space-y-3">
                 <InfoRow icon={<MapPin className="h-4 w-4" />} label="Rua" value={patient.street || '---'} />
                 <InfoRow icon={<MapPin className="h-4 w-4" />} label="Cidade" value={[patient.city, patient.state].filter(Boolean).join(' / ') || '---'} />
@@ -145,7 +145,7 @@ export default function PatientDetail() {
             </Card>
 
             <Card className="md:col-span-2">
-              <CardTitle className="text-base">Historico Medico</CardTitle>
+              <CardTitle className="text-base font-serif">Historico Medico</CardTitle>
               <div className="mt-4 space-y-4">
                 <InfoBlock icon={<Stethoscope className="h-4 w-4" />} label="Historico" text={patient.medical_history || 'Nenhum historico registrado'} />
                 <InfoBlock icon={<AlertTriangle className="h-4 w-4" />} label="Alergias" text={patient.allergies || 'Nenhuma alergia registrada'} />
@@ -159,8 +159,8 @@ export default function PatientDetail() {
           <Card padding={false}>
             {patientEvals.length === 0 ? (
               <div className="text-center py-12">
-                <ClipboardList className="h-10 w-10 text-slate-700 mx-auto mb-3" />
-                <p className="text-sm text-slate-500">Nenhuma avaliacao realizada</p>
+                <ClipboardList className="h-10 w-10 text-editorial-warm mx-auto mb-3" />
+                <p className="text-sm text-editorial-muted">Nenhuma avaliacao realizada</p>
                 <Button size="sm" className="mt-4" loading={starting} onClick={handleNewEvaluation}>
                   Iniciar Avaliacao
                 </Button>
@@ -168,30 +168,30 @@ export default function PatientDetail() {
             ) : (
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-800">
-                    <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">Data</th>
-                    <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">Status</th>
-                    <th className="text-right text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">Score</th>
+                  <tr className="border-b border-editorial-cream">
+                    <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">Data</th>
+                    <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">Status</th>
+                    <th className="text-right text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">Score</th>
                   </tr>
                 </thead>
                 <tbody>
                   {patientEvals.map((ev: Evaluation) => (
                     <tr
                       key={ev.id}
-                      className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors cursor-pointer"
+                      className="border-b border-editorial-cream/50 hover:bg-editorial-cream/40 transition-colors cursor-pointer"
                       onClick={() => navigate(`/evaluations/${ev.id}`)}
                     >
-                      <td className="px-6 py-3 text-sm text-slate-300">{formatDate(ev.created_at)}</td>
+                      <td className="px-6 py-3 text-sm text-editorial-navy/80">{formatDate(ev.created_at)}</td>
                       <td className="px-6 py-3">
                         <Badge variant={getStatusBadgeVariant(ev.status)}>{ev.status}</Badge>
                       </td>
                       <td className="px-6 py-3 text-right">
                         {ev.status === 'Concluído' ? (
-                          <span className="text-sm font-semibold text-slate-200">
+                          <span className="text-sm font-semibold text-editorial-navy">
                             {ev.max_score > 0 ? Math.round((ev.total_score / ev.max_score) * 100) : 0}%
                           </span>
                         ) : (
-                          <span className="text-sm text-slate-600">---</span>
+                          <span className="text-sm text-editorial-warm">---</span>
                         )}
                       </td>
                     </tr>
@@ -209,10 +209,10 @@ export default function PatientDetail() {
 function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="text-slate-600">{icon}</div>
+      <div className="text-editorial-warm">{icon}</div>
       <div className="flex-1 flex items-center justify-between">
-        <span className="text-sm text-slate-500">{label}</span>
-        <span className="text-sm text-slate-200">{value}</span>
+        <span className="text-sm text-editorial-muted">{label}</span>
+        <span className="text-sm text-editorial-navy">{value}</span>
       </div>
     </div>
   );
@@ -222,10 +222,10 @@ function InfoBlock({ icon, label, text }: { icon: React.ReactNode; label: string
   return (
     <div>
       <div className="flex items-center gap-2 mb-1.5">
-        <div className="text-slate-600">{icon}</div>
-        <span className="text-sm font-medium text-slate-400">{label}</span>
+        <div className="text-editorial-warm">{icon}</div>
+        <span className="text-sm font-medium text-editorial-muted">{label}</span>
       </div>
-      <p className="text-sm text-slate-300 pl-6">{text}</p>
+      <p className="text-sm text-editorial-navy/80 pl-6">{text}</p>
     </div>
   );
 }

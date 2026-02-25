@@ -48,7 +48,7 @@ interface DashboardMetrics {
   };
 }
 
-const CHART_COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
+const CHART_COLORS = ['#1A2B48', '#C5A059', '#8A8477', '#3D5A80'];
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -176,32 +176,32 @@ export default function Dashboard() {
       value: metrics?.totalPatients ?? 0,
       icon: Users,
       trend: metrics?.trends.patients,
-      color: 'text-blue-400',
-      bg: 'bg-blue-500/10',
+      color: 'text-editorial-navy',
+      bg: 'bg-editorial-navy/10',
     },
     {
       label: 'Fichas',
       value: metrics?.totalEvaluations ?? 0,
       icon: ClipboardList,
       trend: metrics?.trends.evaluations,
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-500/10',
+      color: 'text-editorial-sage',
+      bg: 'bg-editorial-sage-light',
     },
     {
       label: 'Pendentes',
       value: metrics?.pendingCount ?? 0,
       icon: Clock,
       trend: metrics?.trends.pending,
-      color: 'text-amber-400',
-      bg: 'bg-amber-500/10',
+      color: 'text-editorial-gold',
+      bg: 'bg-editorial-gold/10',
     },
     {
       label: 'Score Medio',
       value: `${metrics?.avgScore ?? 0}%`,
       icon: TrendingUp,
       trend: metrics?.trends.avgScore,
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-500/10',
+      color: 'text-editorial-sage',
+      bg: 'bg-editorial-sage-light',
     },
   ];
 
@@ -209,8 +209,8 @@ export default function Dashboard() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-50">Dashboard</h1>
-          <p className="text-sm text-slate-400 mt-1">Visao geral das avaliacoes e pacientes</p>
+          <h1 className="text-2xl font-bold font-serif text-editorial-navy">Dashboard</h1>
+          <p className="text-sm text-editorial-muted mt-1">Visao geral das avaliacoes e pacientes</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="secondary" size="sm" onClick={() => navigate('/analytics')}>
@@ -226,7 +226,7 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metricCards.map((card) => (
-          <Card key={card.label} className="group hover:border-slate-700 transition-colors">
+          <Card key={card.label} className="group hover:border-editorial-warm transition-colors">
             <div className="flex items-start justify-between">
               <div className={`${card.bg} rounded-lg p-2.5`}>
                 <card.icon className={`h-5 w-5 ${card.color}`} />
@@ -234,7 +234,7 @@ export default function Dashboard() {
               {card.trend?.show && (
                 <div
                   className={`flex items-center gap-0.5 text-xs font-medium ${
-                    card.trend.up ? 'text-emerald-400' : 'text-red-400'
+                    card.trend.up ? 'text-editorial-sage' : 'text-editorial-rose'
                   }`}
                 >
                   {card.trend.up ? (
@@ -247,8 +247,8 @@ export default function Dashboard() {
               )}
             </div>
             <div className="mt-4">
-              <p className="text-2xl font-bold text-slate-50">{card.value}</p>
-              <p className="text-sm text-slate-400 mt-0.5">{card.label}</p>
+              <p className="text-2xl font-bold font-serif text-editorial-navy">{card.value}</p>
+              <p className="text-sm text-editorial-muted mt-0.5">{card.label}</p>
             </div>
           </Card>
         ))}
@@ -260,7 +260,7 @@ export default function Dashboard() {
             <CardTitle>Casos Recentes</CardTitle>
             <Link
               to="/evaluations"
-              className="text-sm text-blue-500 hover:text-blue-400 transition-colors flex items-center gap-1"
+              className="text-sm text-editorial-gold hover:text-editorial-gold-dark transition-colors flex items-center gap-1"
             >
               Ver todos
               <ArrowRight className="h-3.5 w-3.5" />
@@ -269,8 +269,8 @@ export default function Dashboard() {
 
           {recentEvals.length === 0 ? (
             <div className="p-12 text-center">
-              <FileText className="h-10 w-10 text-slate-700 mx-auto mb-3" />
-              <p className="text-sm text-slate-500">Nenhuma avaliacao encontrada</p>
+              <FileText className="h-10 w-10 text-editorial-warm mx-auto mb-3" />
+              <p className="text-sm text-editorial-muted">Nenhuma avaliacao encontrada</p>
               <Button size="sm" className="mt-4" onClick={() => navigate('/patients')}>
                 Iniciar Avaliacao
               </Button>
@@ -279,17 +279,17 @@ export default function Dashboard() {
             <div className="mt-4">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-800">
-                    <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">
+                  <tr className="border-b border-editorial-cream">
+                    <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">
                       Paciente
                     </th>
-                    <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3 hidden md:table-cell">
+                    <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3 hidden md:table-cell">
                       Data
                     </th>
-                    <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">
+                    <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">
                       Status
                     </th>
-                    <th className="text-right text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">
+                    <th className="text-right text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">
                       Score
                     </th>
                   </tr>
@@ -298,33 +298,33 @@ export default function Dashboard() {
                   {recentEvals.map((ev) => (
                     <tr
                       key={ev.id}
-                      className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors cursor-pointer"
+                      className="border-b border-editorial-cream/50 hover:bg-editorial-paper/30 transition-colors cursor-pointer"
                       onClick={() => navigate(`/evaluations/${ev.id}`)}
                     >
                       <td className="px-6 py-3">
                         <div className="flex items-center gap-3">
                           <Avatar name={ev.patient?.full_name ?? 'P'} size="sm" />
                           <div>
-                            <p className="text-sm font-medium text-slate-200">
+                            <p className="text-sm font-medium text-editorial-navy">
                               {ev.patient?.full_name ?? 'Paciente'}
                             </p>
-                            <p className="text-xs text-slate-500">{ev.patient?.cpf}</p>
+                            <p className="text-xs text-editorial-muted">{ev.patient?.cpf}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-3 hidden md:table-cell">
-                        <span className="text-sm text-slate-400">{formatDate(ev.created_at)}</span>
+                        <span className="text-sm text-editorial-muted">{formatDate(ev.created_at)}</span>
                       </td>
                       <td className="px-6 py-3">
                         <Badge variant={getStatusBadgeVariant(ev.status)}>{ev.status}</Badge>
                       </td>
                       <td className="px-6 py-3 text-right">
                         {ev.status === 'Concluído' ? (
-                          <span className="text-sm font-semibold text-slate-200">
+                          <span className="text-sm font-semibold text-editorial-navy">
                             {ev.max_score > 0 ? Math.round((ev.total_score / ev.max_score) * 100) : 0}%
                           </span>
                         ) : (
-                          <span className="text-sm text-slate-600">---</span>
+                          <span className="text-sm text-editorial-warm">---</span>
                         )}
                       </td>
                     </tr>
@@ -339,7 +339,7 @@ export default function Dashboard() {
           <CardTitle>Distribuicao por Classe</CardTitle>
           {chartData.length === 0 ? (
             <div className="flex items-center justify-center h-48">
-              <p className="text-sm text-slate-500">Sem dados para exibir</p>
+              <p className="text-sm text-editorial-muted">Sem dados para exibir</p>
             </div>
           ) : (
             <div className="h-56 mt-4">
@@ -361,10 +361,10 @@ export default function Dashboard() {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#1e293b',
-                      border: '1px solid #334155',
+                      backgroundColor: '#FAF9F7',
+                      border: '1px solid #E8E6E1',
                       borderRadius: '0.5rem',
-                      color: '#f1f5f9',
+                      color: '#1A2B48',
                       fontSize: '0.875rem',
                     }}
                   />
@@ -380,9 +380,9 @@ export default function Dashboard() {
                     className="w-2.5 h-2.5 rounded-full"
                     style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] }}
                   />
-                  <span className="text-sm text-slate-400">{item.name}</span>
+                  <span className="text-sm text-editorial-muted">{item.name}</span>
                 </div>
-                <span className="text-sm font-medium text-slate-300">{item.value}</span>
+                <span className="text-sm font-medium text-editorial-navy">{item.value}</span>
               </div>
             ))}
           </div>

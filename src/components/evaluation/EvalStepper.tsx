@@ -20,19 +20,19 @@ export function EvalStepper({ currentStep, onStepClick, answeredSteps }: EvalSte
               onClick={() => onStepClick(index)}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors shrink-0 focus-ring ${
                 isActive
-                  ? 'bg-blue-600/10 text-blue-400 border border-blue-600/30'
+                  ? 'bg-editorial-gold/10 text-editorial-gold border border-editorial-gold/30'
                   : isCompleted
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                  : 'text-slate-500 hover:text-slate-400 hover:bg-slate-800 border border-transparent'
+                  ? 'bg-editorial-sage-light text-editorial-sage border border-editorial-sage/20'
+                  : 'text-editorial-muted hover:text-editorial-navy-light hover:bg-editorial-cream/40 border border-transparent'
               }`}
             >
               <div
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-serif shrink-0 ${
                   isActive
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-editorial-gold text-white'
                     : isCompleted
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-slate-700 text-slate-400'
+                    ? 'bg-editorial-sage text-white'
+                    : 'bg-editorial-cream text-editorial-muted'
                 }`}
               >
                 {isCompleted ? <Check className="h-3.5 w-3.5" /> : index + 1}
@@ -42,7 +42,7 @@ export function EvalStepper({ currentStep, onStepClick, answeredSteps }: EvalSte
             {index < EVALUATION_STEPS.length - 1 && (
               <div
                 className={`w-4 lg:w-8 h-px mx-0.5 shrink-0 ${
-                  isCompleted ? 'bg-emerald-500/40' : 'bg-slate-700'
+                  isCompleted ? 'bg-editorial-sage/40' : 'bg-editorial-cream'
                 }`}
               />
             )}

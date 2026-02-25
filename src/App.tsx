@@ -23,7 +23,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   if (!initialized) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-8">
+      <div className="min-h-screen bg-editorial-paper flex items-center justify-center p-8">
         <PageSkeleton />
       </div>
     );
@@ -38,7 +38,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
   if (!initialized) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-8">
+      <div className="min-h-screen bg-editorial-paper flex items-center justify-center p-8">
         <PageSkeleton />
       </div>
     );

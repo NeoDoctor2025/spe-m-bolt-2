@@ -147,8 +147,8 @@ export default function Help() {
   return (
     <div className="space-y-6 animate-fade-in max-w-3xl">
       <div>
-        <h1 className="text-2xl font-bold text-slate-50">Central de Ajuda</h1>
-        <p className="text-sm text-slate-400 mt-1">Encontre respostas para suas duvidas</p>
+        <h1 className="text-2xl font-bold font-serif text-editorial-navy">Central de Ajuda</h1>
+        <p className="text-sm text-editorial-muted mt-1">Encontre respostas para suas duvidas</p>
       </div>
 
       <Input
@@ -160,25 +160,25 @@ export default function Help() {
 
       {filteredSections.length === 0 ? (
         <Card className="text-center py-12">
-          <HelpCircle className="h-10 w-10 text-slate-700 mx-auto mb-3" />
-          <p className="text-sm text-slate-500">Nenhum resultado encontrado</p>
+          <HelpCircle className="h-10 w-10 text-editorial-warm mx-auto mb-3" />
+          <p className="text-sm text-editorial-muted">Nenhum resultado encontrado</p>
         </Card>
       ) : (
         <div className="space-y-4">
           {filteredSections.map((section) => (
             <Card key={section.title} padding={false}>
               <div className="px-6 pt-5 pb-3">
-                <h2 className="text-base font-semibold text-slate-200">{section.title}</h2>
+                <h2 className="text-base font-semibold font-serif text-editorial-navy">{section.title}</h2>
               </div>
-              <Accordion.Root type="multiple" className="divide-y divide-slate-800/50">
+              <Accordion.Root type="multiple" className="divide-y divide-editorial-cream">
                 {section.items.map((item, index) => (
                   <Accordion.Item key={index} value={`${section.title}-${index}`}>
-                    <Accordion.Trigger className="flex items-center justify-between w-full px-6 py-4 text-left text-sm text-slate-300 hover:text-slate-100 transition-colors group">
+                    <Accordion.Trigger className="flex items-center justify-between w-full px-6 py-4 text-left text-sm text-editorial-navy/80 hover:text-editorial-navy transition-colors group">
                       <span>{item.question}</span>
-                      <ChevronDown className="h-4 w-4 text-slate-500 shrink-0 ml-4 transition-transform group-data-[state=open]:rotate-180" />
+                      <ChevronDown className="h-4 w-4 text-editorial-muted shrink-0 ml-4 transition-transform group-data-[state=open]:rotate-180" />
                     </Accordion.Trigger>
                     <Accordion.Content className="overflow-hidden data-[state=open]:animate-slide-down data-[state=closed]:animate-fade-in">
-                      <p className="px-6 pb-4 text-sm text-slate-400 leading-relaxed">
+                      <p className="px-6 pb-4 text-sm text-editorial-muted leading-relaxed">
                         {item.answer}
                       </p>
                     </Accordion.Content>
@@ -191,14 +191,14 @@ export default function Help() {
       )}
 
       <Card className="text-center">
-        <Mail className="h-8 w-8 text-slate-600 mx-auto mb-3" />
-        <h3 className="text-base font-semibold text-slate-200 mb-1">Precisa de mais ajuda?</h3>
-        <p className="text-sm text-slate-400 mb-4">
+        <Mail className="h-8 w-8 text-editorial-warm mx-auto mb-3" />
+        <h3 className="text-base font-semibold font-serif text-editorial-navy mb-1">Precisa de mais ajuda?</h3>
+        <p className="text-sm text-editorial-muted mb-4">
           Entre em contato com nossa equipe de suporte
         </p>
         <a
           href="mailto:suporte@spem.com.br"
-          className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-editorial-gold hover:text-editorial-gold-light transition-colors"
         >
           <Mail className="h-4 w-4" />
           suporte@spem.com.br

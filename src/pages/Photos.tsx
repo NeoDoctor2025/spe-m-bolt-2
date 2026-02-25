@@ -210,8 +210,8 @@ export default function Photos() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-50">Fotos</h1>
-          <p className="text-sm text-slate-400 mt-1">Gerenciamento de fotos dos pacientes</p>
+          <h1 className="text-2xl font-bold font-serif text-editorial-navy">Fotos</h1>
+          <p className="text-sm text-editorial-muted mt-1">Gerenciamento de fotos dos pacientes</p>
         </div>
       </div>
 
@@ -236,7 +236,7 @@ export default function Photos() {
       ) : loading ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="aspect-[3/4] rounded-lg bg-slate-800 animate-pulse" />
+            <div key={i} className="aspect-[3/4] rounded-lg bg-editorial-cream animate-pulse" />
           ))}
         </div>
       ) : (
@@ -245,12 +245,12 @@ export default function Photos() {
             const photo = getPhotoForViewport(vp.key);
             return (
               <div key={vp.key} className="space-y-2">
-                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider text-center">
+                <p className="text-xs font-medium text-editorial-muted uppercase tracking-wider text-center">
                   {vp.label}
                 </p>
                 {photo ? (
                   <div
-                    className="relative aspect-[3/4] rounded-lg overflow-hidden border border-slate-800 group cursor-pointer"
+                    className="relative aspect-[3/4] rounded-lg overflow-hidden border border-editorial-cream group cursor-pointer"
                     onClick={() => openAnnotation(photo)}
                   >
                     <img
@@ -263,9 +263,9 @@ export default function Photos() {
                     </div>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center aspect-[3/4] rounded-lg border-2 border-dashed border-slate-700 hover:border-slate-600 cursor-pointer transition-colors bg-slate-900/50">
-                    <Upload className="h-8 w-8 text-slate-600 mb-2" />
-                    <span className="text-xs text-slate-500">Arraste ou clique</span>
+                  <label className="flex flex-col items-center justify-center aspect-[3/4] rounded-lg border-2 border-dashed border-editorial-gold hover:border-editorial-gold-light cursor-pointer transition-colors bg-editorial-light/50">
+                    <Upload className="h-8 w-8 text-editorial-warm mb-2" />
+                    <span className="text-xs text-editorial-muted">Arraste ou clique</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -298,16 +298,16 @@ export default function Photos() {
               <Button variant={tool === 'eraser' ? 'primary' : 'ghost'} size="sm" onClick={() => setTool('eraser')}>
                 <Eraser className="h-3.5 w-3.5" />
               </Button>
-              <div className="w-px h-6 bg-slate-700 mx-1" />
+              <div className="w-px h-6 bg-editorial-cream mx-1" />
               {DRAW_COLORS.map((c) => (
                 <button
                   key={c}
                   onClick={() => { setDrawColor(c); setTool('pen'); }}
-                  className={`w-5 h-5 rounded-full border-2 ${drawColor === c && tool === 'pen' ? 'border-white' : 'border-slate-600'}`}
+                  className={`w-5 h-5 rounded-full border-2 ${drawColor === c && tool === 'pen' ? 'border-editorial-navy' : 'border-editorial-warm'}`}
                   style={{ backgroundColor: c }}
                 />
               ))}
-              <div className="w-px h-6 bg-slate-700 mx-1" />
+              <div className="w-px h-6 bg-editorial-cream mx-1" />
               <Button variant="ghost" size="sm" onClick={() => { if (drawOps.length) { setUndoStack((u) => [...u, drawOps[drawOps.length - 1]]); setDrawOps((o) => o.slice(0, -1)); } }}>
                 <Undo2 className="h-3.5 w-3.5" />
               </Button>
@@ -327,7 +327,7 @@ export default function Photos() {
               </Button>
             </div>
           </div>
-          <div className="bg-slate-950 rounded-lg overflow-hidden cursor-crosshair">
+          <div className="bg-editorial-paper rounded-lg overflow-hidden cursor-crosshair">
             <canvas
               ref={canvasRef}
               className="block w-full"

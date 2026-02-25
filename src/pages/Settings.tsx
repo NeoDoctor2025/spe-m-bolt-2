@@ -53,22 +53,22 @@ export default function Settings() {
   return (
     <div className="space-y-6 animate-fade-in max-w-3xl">
       <div>
-        <h1 className="text-2xl font-bold text-slate-50">Configuracoes</h1>
-        <p className="text-sm text-slate-400 mt-1">Gerencie seu perfil e configuracoes da clinica</p>
+        <h1 className="text-2xl font-bold font-serif text-editorial-navy">Configuracoes</h1>
+        <p className="text-sm text-editorial-muted mt-1">Gerencie seu perfil e configuracoes da clinica</p>
       </div>
 
       <Tabs.Root defaultValue="profile">
-        <Tabs.List className="flex gap-1 border-b border-slate-800 pb-px mb-6">
+        <Tabs.List className="flex gap-1 border-b border-editorial-cream pb-px mb-6">
           <Tabs.Trigger
             value="profile"
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-500 border-b-2 border-transparent transition-colors data-[state=active]:text-blue-400 data-[state=active]:border-blue-400 hover:text-slate-300 focus-ring rounded-t-lg"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-editorial-muted border-b-2 border-transparent transition-colors data-[state=active]:text-editorial-gold data-[state=active]:border-editorial-gold hover:text-editorial-navy focus-ring rounded-t-lg"
           >
             <User className="h-4 w-4" />
             Perfil
           </Tabs.Trigger>
           <Tabs.Trigger
             value="clinic"
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-500 border-b-2 border-transparent transition-colors data-[state=active]:text-blue-400 data-[state=active]:border-blue-400 hover:text-slate-300 focus-ring rounded-t-lg"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-editorial-muted border-b-2 border-transparent transition-colors data-[state=active]:text-editorial-gold data-[state=active]:border-editorial-gold hover:text-editorial-navy focus-ring rounded-t-lg"
           >
             <Building2 className="h-4 w-4" />
             Clinica
@@ -81,12 +81,12 @@ export default function Settings() {
               <div className="flex items-center gap-4 mb-6">
                 <Avatar name={profile.full_name ?? 'U'} size="xl" />
                 <div>
-                  <p className="text-lg font-semibold text-slate-100">{profile.full_name}</p>
-                  <p className="text-sm text-slate-400">{profile.email}</p>
+                  <p className="text-lg font-semibold text-editorial-navy">{profile.full_name}</p>
+                  <p className="text-sm text-editorial-muted">{profile.email}</p>
                 </div>
               </div>
 
-              <CardTitle className="text-base">Informacoes Pessoais</CardTitle>
+              <CardTitle className="text-base font-serif">Informacoes Pessoais</CardTitle>
               <CardDescription>Seus dados profissionais</CardDescription>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
@@ -127,7 +127,7 @@ export default function Settings() {
 
           <Tabs.Content value="clinic" className="space-y-6">
             <Card>
-              <CardTitle className="text-base">Dados da Clinica</CardTitle>
+              <CardTitle className="text-base font-serif">Dados da Clinica</CardTitle>
               <CardDescription>Informacoes do local de atendimento</CardDescription>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">

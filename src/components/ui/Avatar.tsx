@@ -27,7 +27,7 @@ export function Avatar({ name, src, size = 'md', className = '' }: AvatarProps) 
 
   return (
     <div
-      className={`${sizeMap[size]} rounded-full bg-blue-600/20 text-blue-400 flex items-center justify-center font-semibold shrink-0 ${className}`}
+      className={`${sizeMap[size]} rounded-full bg-editorial-gold/15 text-editorial-gold-dark flex items-center justify-center font-semibold font-serif shrink-0 ${className}`}
     >
       {generateInitials(name)}
     </div>

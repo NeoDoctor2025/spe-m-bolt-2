@@ -5,21 +5,41 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['Playfair Display', 'Georgia', 'Times New Roman', 'serif'],
       },
       colors: {
-        surgical: {
-          blue: '#0066FF',
-          'blue-hover': '#0052CC',
-          'blue-light': '#0066FF1A',
+        editorial: {
+          navy: '#1A2B48',
+          'navy-light': '#2A3F62',
+          'navy-dark': '#111D33',
+          gold: '#C5A059',
+          'gold-light': '#D4B574',
+          'gold-dark': '#A8873D',
+          'gold-muted': '#C5A05926',
+          paper: '#F2F2F0',
+          cream: '#E8E6E1',
+          warm: '#D4CFC5',
+          muted: '#8A8477',
+          light: '#FAF9F7',
+          'light-hover': '#F5F3EF',
+          sage: '#6B7F6B',
+          'sage-light': '#6B7F6B1A',
+          rose: '#9B4D4D',
+          'rose-light': '#9B4D4D1A',
+          slate: '#3D5A80',
+          'slate-light': '#3D5A801A',
         },
       },
       maxWidth: {
         container: '1400px',
       },
+      letterSpacing: {
+        editorial: '0.15em',
+      },
       animation: {
-        'fade-in': 'fadeIn 0.3s ease-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'slide-down': 'slideDown 0.3s ease-out',
+        'fade-in': 'fadeIn 0.4s ease-out',
+        'slide-up': 'slideUp 0.4s ease-out',
+        'slide-down': 'slideDown 0.4s ease-out',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
       keyframes: {

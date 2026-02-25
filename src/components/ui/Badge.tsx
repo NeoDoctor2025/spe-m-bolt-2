@@ -9,11 +9,11 @@ interface BadgeProps {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  success: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  warning: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  error: 'bg-red-500/10 text-red-400 border-red-500/20',
-  info: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  neutral: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+  success: 'bg-editorial-sage-light text-editorial-sage border-editorial-sage/20',
+  warning: 'bg-editorial-gold/10 text-editorial-gold-dark border-editorial-gold/20',
+  error: 'bg-editorial-rose-light text-editorial-rose border-editorial-rose/20',
+  info: 'bg-editorial-navy/8 text-editorial-navy border-editorial-navy/15',
+  neutral: 'bg-editorial-cream/60 text-editorial-muted border-editorial-warm/30',
 };
 
 export function Badge({ variant = 'neutral', children, className = '' }: BadgeProps) {
@@ -28,6 +28,7 @@ export function Badge({ variant = 'neutral', children, className = '' }: BadgePr
 
 export function getStatusBadgeVariant(status: string): BadgeVariant {
   switch (status) {
+    case 'Concluido':
     case 'Concluído':
     case 'Ativo':
       return 'success';

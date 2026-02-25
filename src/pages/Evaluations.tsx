@@ -20,13 +20,13 @@ export default function Evaluations() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-slate-50">Avaliacoes</h1>
-        <p className="text-sm text-slate-400 mt-1">Todas as avaliacoes realizadas</p>
+        <h1 className="text-2xl font-bold font-serif text-editorial-navy">Avaliacoes</h1>
+        <p className="text-sm text-editorial-muted mt-1">Todas as avaliacoes realizadas</p>
       </div>
 
       <Card padding={false}>
         {loading ? (
-          <div className="divide-y divide-slate-800">
+          <div className="divide-y divide-editorial-cream">
             {[...Array(6)].map((_, i) => (
               <TableRowSkeleton key={i} />
             ))}
@@ -40,17 +40,17 @@ export default function Evaluations() {
         ) : (
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-800">
-                <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">
+              <tr className="border-b border-editorial-cream">
+                <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">
                   Paciente
                 </th>
-                <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3 hidden md:table-cell">
+                <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3 hidden md:table-cell">
                   Data
                 </th>
-                <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">
+                <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">
                   Status
                 </th>
-                <th className="text-right text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-3">
+                <th className="text-right text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">
                   Score
                 </th>
               </tr>
@@ -59,33 +59,33 @@ export default function Evaluations() {
               {evaluations.map((ev) => (
                 <tr
                   key={ev.id}
-                  className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors cursor-pointer"
+                  className="border-b border-editorial-cream/50 hover:bg-editorial-cream/40 transition-colors cursor-pointer"
                   onClick={() => navigate(`/evaluations/${ev.id}`)}
                 >
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
                       <Avatar name={ev.patient?.full_name ?? 'P'} size="sm" />
                       <div>
-                        <p className="text-sm font-medium text-slate-200">
+                        <p className="text-sm font-medium text-editorial-navy">
                           {ev.patient?.full_name ?? 'Paciente'}
                         </p>
-                        <p className="text-xs text-slate-500">{ev.patient?.cpf}</p>
+                        <p className="text-xs text-editorial-muted">{ev.patient?.cpf}</p>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-3 hidden md:table-cell">
-                    <span className="text-sm text-slate-400">{formatDate(ev.created_at)}</span>
+                    <span className="text-sm text-editorial-muted">{formatDate(ev.created_at)}</span>
                   </td>
                   <td className="px-6 py-3">
                     <Badge variant={getStatusBadgeVariant(ev.status)}>{ev.status}</Badge>
                   </td>
                   <td className="px-6 py-3 text-right">
-                    {ev.status === 'Concluído' ? (
-                      <span className="text-sm font-semibold text-slate-200">
+                    {ev.status === 'Concluido' ? (
+                      <span className="text-sm font-semibold font-serif text-editorial-navy">
                         {ev.max_score > 0 ? Math.round((ev.total_score / ev.max_score) * 100) : 0}%
                       </span>
                     ) : (
-                      <span className="text-sm text-slate-600">---</span>
+                      <span className="text-sm text-editorial-warm">---</span>
                     )}
                   </td>
                 </tr>

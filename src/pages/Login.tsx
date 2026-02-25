@@ -36,8 +36,8 @@ export default function Login() {
   return (
     <AuthLayout>
       <div>
-        <h2 className="text-2xl font-bold text-slate-50 mb-1">Entrar</h2>
-        <p className="text-sm text-slate-400 mb-8">
+        <h2 className="text-2xl font-bold font-serif text-editorial-navy mb-1">Entrar</h2>
+        <p className="text-sm text-editorial-muted mb-8">
           Acesse sua conta para continuar
         </p>
 
@@ -63,7 +63,7 @@ export default function Login() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-[38px] text-slate-500 hover:text-slate-300 transition-colors"
+              className="absolute right-3 top-[38px] text-editorial-muted hover:text-editorial-navy transition-colors"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -73,13 +73,13 @@ export default function Login() {
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-blue-600 focus:ring-offset-0"
+                className="w-4 h-4 rounded border-editorial-cream bg-white text-editorial-gold focus:ring-editorial-gold focus:ring-offset-0"
               />
-              <span className="text-sm text-slate-400">Lembrar-me</span>
+              <span className="text-sm text-editorial-muted">Lembrar-me</span>
             </label>
             <Link
               to="/forgot-password"
-              className="text-sm text-blue-500 hover:text-blue-400 transition-colors"
+              className="text-sm text-editorial-gold hover:text-editorial-gold-dark transition-colors"
             >
               Esqueceu a senha?
             </Link>
@@ -91,9 +91,9 @@ export default function Login() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-slate-500 mt-6">
+        <p className="text-center text-sm text-editorial-muted mt-6">
           Nao tem uma conta?{' '}
-          <Link to="/register" className="text-blue-500 hover:text-blue-400 transition-colors font-medium">
+          <Link to="/register" className="text-editorial-gold hover:text-editorial-gold-dark transition-colors font-medium">
             Criar conta
           </Link>
         </p>

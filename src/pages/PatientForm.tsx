@@ -106,9 +106,9 @@ export default function PatientForm() {
   if (notFound) {
     return (
       <div className="text-center py-20 animate-fade-in">
-        <AlertTriangle className="h-12 w-12 text-amber-400 mx-auto mb-4" />
-        <h2 className="text-lg font-semibold text-slate-200 mb-1">Paciente nao encontrado</h2>
-        <p className="text-sm text-slate-500 mb-6">O paciente solicitado nao existe ou foi removido.</p>
+        <AlertTriangle className="h-12 w-12 text-editorial-gold mx-auto mb-4" />
+        <h2 className="text-lg font-semibold font-serif text-editorial-navy mb-1">Paciente nao encontrado</h2>
+        <p className="text-sm text-editorial-muted mb-6">O paciente solicitado nao existe ou foi removido.</p>
         <Button variant="secondary" onClick={() => navigate('/patients')}>
           Voltar para Pacientes
         </Button>
@@ -121,15 +121,15 @@ export default function PatientForm() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+          className="p-2 rounded-lg text-editorial-muted hover:text-editorial-navy hover:bg-editorial-cream/40 transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div>
-          <h1 className="text-2xl font-bold text-slate-50">
+          <h1 className="text-2xl font-bold font-serif text-editorial-navy">
             {isEdit ? 'Editar Paciente' : 'Novo Paciente'}
           </h1>
-          <p className="text-sm text-slate-400 mt-0.5">
+          <p className="text-sm text-editorial-muted mt-0.5">
             {isEdit ? 'Atualize os dados do paciente' : 'Preencha os dados para cadastrar'}
           </p>
         </div>
@@ -137,7 +137,7 @@ export default function PatientForm() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Card>
-          <CardTitle>Dados Pessoais</CardTitle>
+          <CardTitle className="font-serif">Dados Pessoais</CardTitle>
           <CardDescription>Informacoes basicas do paciente</CardDescription>
           <div className="grid grid-cols-12 gap-4 mt-4">
             <div className="col-span-12 sm:col-span-6">
@@ -178,7 +178,7 @@ export default function PatientForm() {
         </Card>
 
         <Card>
-          <CardTitle>Contato</CardTitle>
+          <CardTitle className="font-serif">Contato</CardTitle>
           <CardDescription>Telefone e e-mail do paciente</CardDescription>
           <div className="grid grid-cols-12 gap-4 mt-4">
             <div className="col-span-12 sm:col-span-4">
@@ -191,7 +191,7 @@ export default function PatientForm() {
         </Card>
 
         <Card>
-          <CardTitle>Endereco</CardTitle>
+          <CardTitle className="font-serif">Endereco</CardTitle>
           <CardDescription>Endereco residencial do paciente</CardDescription>
           <div className="grid grid-cols-12 gap-4 mt-4">
             <div className="col-span-12 sm:col-span-6">
@@ -215,7 +215,7 @@ export default function PatientForm() {
         </Card>
 
         <Card>
-          <CardTitle>Historico Medico</CardTitle>
+          <CardTitle className="font-serif">Historico Medico</CardTitle>
           <CardDescription>Informacoes clinicas relevantes</CardDescription>
           <div className="grid grid-cols-12 gap-4 mt-4">
             <div className="col-span-12">
