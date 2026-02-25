@@ -41,10 +41,23 @@ export default function Register() {
 
   const passwordStrength = getPasswordStrength();
 
+  const translateAuthError = (msg: string): string => {
+    const lower = msg.toLowerCase();
+    if (lower.includes('already registered') || lower.includes('already been registered'))
+      return 'Este e-mail ja possui uma conta cadastrada. Tente fazer login.';
+    if (lower.includes('password') && (lower.includes('short') || lower.includes('weak') || lower.includes('least')))
+      return 'A senha deve ter pelo menos 8 caracteres.';
+    if (lower.includes('valid email') || lower.includes('invalid email'))
+      return 'Informe um endereco de e-mail valido.';
+    if (lower.includes('rate limit') || lower.includes('too many'))
+      return 'Muitas tentativas. Aguarde alguns minutos e tente novamente.';
+    return msg;
+  };
+
   const onSubmit = async (data: RegisterFormData) => {
     const { error } = await signUp(data.email, data.password, data.full_name);
     if (error) {
-      showToast(error, 'error');
+      showToast(translateAuthError(error), 'error');
     } else {
       showToast('Conta criada com sucesso!', 'success');
       navigate('/dashboard');

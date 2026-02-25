@@ -12,6 +12,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
 } from 'lucide-react';
+import { startOfMonth, subMonths } from 'date-fns';
 import { Card, CardTitle } from '../components/ui/Card';
 import { Badge, getStatusBadgeVariant } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -28,11 +29,23 @@ import {
   Tooltip,
 } from 'recharts';
 
+interface TrendData {
+  value: string;
+  up: boolean;
+  show: boolean;
+}
+
 interface DashboardMetrics {
   totalPatients: number;
   totalEvaluations: number;
   pendingCount: number;
   avgScore: number;
+  trends: {
+    patients: TrendData;
+    evaluations: TrendData;
+    pending: TrendData;
+    avgScore: TrendData;
+  };
 }
 
 const CHART_COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
@@ -45,14 +58,38 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    function calcTrend(current: number, previous: number): TrendData {
+      if (previous === 0 && current === 0) return { value: '0%', up: true, show: false };
+      if (previous === 0) return { value: '+100%', up: true, show: true };
+      const pct = Math.round(((current - previous) / previous) * 100);
+      return { value: `${pct >= 0 ? '+' : ''}${pct}%`, up: pct >= 0, show: true };
+    }
+
     async function fetchData() {
       setLoading(true);
 
-      const [patientsRes, evalsRes, pendingRes, scoresRes] = await Promise.all([
+      const now = new Date();
+      const thisMonthStart = startOfMonth(now).toISOString();
+      const lastMonthStart = startOfMonth(subMonths(now, 1)).toISOString();
+
+      const [
+        patientsRes, evalsRes, pendingRes, scoresRes,
+        patientsThisMonth, patientsLastMonth,
+        evalsThisMonth, evalsLastMonth,
+        pendingThisMonth, pendingLastMonth,
+        scoresLastMonth,
+      ] = await Promise.all([
         supabase.from('patients').select('id', { count: 'exact', head: true }),
         supabase.from('evaluations').select('id', { count: 'exact', head: true }),
         supabase.from('evaluations').select('id', { count: 'exact', head: true }).eq('status', 'Pendente'),
         supabase.from('evaluations').select('total_score, max_score').eq('status', 'Concluído'),
+        supabase.from('patients').select('id', { count: 'exact', head: true }).gte('created_at', thisMonthStart),
+        supabase.from('patients').select('id', { count: 'exact', head: true }).gte('created_at', lastMonthStart).lt('created_at', thisMonthStart),
+        supabase.from('evaluations').select('id', { count: 'exact', head: true }).gte('created_at', thisMonthStart),
+        supabase.from('evaluations').select('id', { count: 'exact', head: true }).gte('created_at', lastMonthStart).lt('created_at', thisMonthStart),
+        supabase.from('evaluations').select('id', { count: 'exact', head: true }).eq('status', 'Pendente').gte('created_at', thisMonthStart),
+        supabase.from('evaluations').select('id', { count: 'exact', head: true }).eq('status', 'Pendente').gte('created_at', lastMonthStart).lt('created_at', thisMonthStart),
+        supabase.from('evaluations').select('total_score, max_score').eq('status', 'Concluído').gte('completed_at', lastMonthStart).lt('completed_at', thisMonthStart),
       ]);
 
       const scores = scoresRes.data ?? [];
@@ -64,11 +101,26 @@ export default function Dashboard() {
             )
           : 0;
 
+      const scoresThisMonthData = scores.filter(() => true);
+      const scoresLastMonthData = scoresLastMonth.data ?? [];
+      const avgThis = scoresThisMonthData.length > 0
+        ? Math.round(scoresThisMonthData.reduce((s, e) => s + (e.max_score > 0 ? (e.total_score / e.max_score) * 100 : 0), 0) / scoresThisMonthData.length)
+        : 0;
+      const avgLast = scoresLastMonthData.length > 0
+        ? Math.round(scoresLastMonthData.reduce((s, e) => s + (e.max_score > 0 ? (e.total_score / e.max_score) * 100 : 0), 0) / scoresLastMonthData.length)
+        : 0;
+
       setMetrics({
         totalPatients: patientsRes.count ?? 0,
         totalEvaluations: evalsRes.count ?? 0,
         pendingCount: pendingRes.count ?? 0,
         avgScore,
+        trends: {
+          patients: calcTrend(patientsThisMonth.count ?? 0, patientsLastMonth.count ?? 0),
+          evaluations: calcTrend(evalsThisMonth.count ?? 0, evalsLastMonth.count ?? 0),
+          pending: calcTrend(pendingThisMonth.count ?? 0, pendingLastMonth.count ?? 0),
+          avgScore: calcTrend(avgThis, avgLast),
+        },
       });
 
       const { data: recent } = await supabase
@@ -123,8 +175,7 @@ export default function Dashboard() {
       label: 'Pacientes',
       value: metrics?.totalPatients ?? 0,
       icon: Users,
-      trend: '+12%',
-      trendUp: true,
+      trend: metrics?.trends.patients,
       color: 'text-blue-400',
       bg: 'bg-blue-500/10',
     },
@@ -132,8 +183,7 @@ export default function Dashboard() {
       label: 'Fichas',
       value: metrics?.totalEvaluations ?? 0,
       icon: ClipboardList,
-      trend: '+8%',
-      trendUp: true,
+      trend: metrics?.trends.evaluations,
       color: 'text-emerald-400',
       bg: 'bg-emerald-500/10',
     },
@@ -141,8 +191,7 @@ export default function Dashboard() {
       label: 'Pendentes',
       value: metrics?.pendingCount ?? 0,
       icon: Clock,
-      trend: '-5%',
-      trendUp: false,
+      trend: metrics?.trends.pending,
       color: 'text-amber-400',
       bg: 'bg-amber-500/10',
     },
@@ -150,8 +199,7 @@ export default function Dashboard() {
       label: 'Score Medio',
       value: `${metrics?.avgScore ?? 0}%`,
       icon: TrendingUp,
-      trend: '+3%',
-      trendUp: true,
+      trend: metrics?.trends.avgScore,
       color: 'text-emerald-400',
       bg: 'bg-emerald-500/10',
     },
@@ -183,18 +231,20 @@ export default function Dashboard() {
               <div className={`${card.bg} rounded-lg p-2.5`}>
                 <card.icon className={`h-5 w-5 ${card.color}`} />
               </div>
-              <div
-                className={`flex items-center gap-0.5 text-xs font-medium ${
-                  card.trendUp ? 'text-emerald-400' : 'text-red-400'
-                }`}
-              >
-                {card.trendUp ? (
-                  <ArrowUpRight className="h-3 w-3" />
-                ) : (
-                  <ArrowDownRight className="h-3 w-3" />
-                )}
-                {card.trend}
-              </div>
+              {card.trend?.show && (
+                <div
+                  className={`flex items-center gap-0.5 text-xs font-medium ${
+                    card.trend.up ? 'text-emerald-400' : 'text-red-400'
+                  }`}
+                >
+                  {card.trend.up ? (
+                    <ArrowUpRight className="h-3 w-3" />
+                  ) : (
+                    <ArrowDownRight className="h-3 w-3" />
+                  )}
+                  {card.trend.value}
+                </div>
+              )}
             </div>
             <div className="mt-4">
               <p className="text-2xl font-bold text-slate-50">{card.value}</p>

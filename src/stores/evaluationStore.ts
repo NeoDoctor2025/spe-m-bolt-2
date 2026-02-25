@@ -172,22 +172,11 @@ export const useEvaluationStore = create<EvaluationState>((set, get) => ({
     }));
 
     if (rows.length > 0) {
-      const { error: insertError } = await supabase
+      const { error: upsertError } = await supabase
         .from('evaluation_criteria')
         .upsert(rows, { onConflict: 'evaluation_id,criterion_key', ignoreDuplicates: false });
 
-      if (insertError) {
-        await supabase
-          .from('evaluation_criteria')
-          .delete()
-          .eq('evaluation_id', currentEvaluation.id);
-
-        const { error: fallbackError } = await supabase
-          .from('evaluation_criteria')
-          .insert(rows);
-
-        if (fallbackError) return { error: fallbackError.message };
-      }
+      if (upsertError) return { error: upsertError.message };
     }
 
     return { error: null };
@@ -211,16 +200,11 @@ export const useEvaluationStore = create<EvaluationState>((set, get) => ({
     }));
 
     if (rows.length > 0) {
-      await supabase
+      const { error: upsertError } = await supabase
         .from('evaluation_criteria')
-        .delete()
-        .eq('evaluation_id', currentEvaluation.id);
+        .upsert(rows, { onConflict: 'evaluation_id,criterion_key', ignoreDuplicates: false });
 
-      const { error: insertError } = await supabase
-        .from('evaluation_criteria')
-        .insert(rows);
-
-      if (insertError) return { error: insertError.message };
+      if (upsertError) return { error: upsertError.message };
     }
 
     const { error } = await supabase

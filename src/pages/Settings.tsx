@@ -11,7 +11,7 @@ import { Avatar } from '../components/ui/Avatar';
 import { PageSkeleton } from '../components/ui/Skeleton';
 import { useAuthStore } from '../stores/authStore';
 import { useUIStore } from '../stores/uiStore';
-import { SPECIALTIES } from '../data/mockData';
+import { SPECIALTIES } from '../data/constants';
 
 export default function Settings() {
   const { profile, loading, updateProfile } = useAuthStore();

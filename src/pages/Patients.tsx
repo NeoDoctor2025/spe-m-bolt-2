@@ -10,6 +10,8 @@ import {
   ClipboardList,
   ChevronLeft,
   ChevronRight,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -18,9 +20,12 @@ import { Badge, getClassificationBadgeVariant, getStatusBadgeVariant } from '../
 import { Avatar } from '../components/ui/Avatar';
 import { EmptyState } from '../components/ui/EmptyState';
 import { TableRowSkeleton } from '../components/ui/Skeleton';
+import { Modal } from '../components/ui/Modal';
 import { usePatientStore } from '../stores/patientStore';
+import { useUIStore } from '../stores/uiStore';
 import { formatCPF, formatDate } from '../lib/utils';
 import { useState } from 'react';
+import type { Patient } from '../lib/types';
 
 export default function Patients() {
   const navigate = useNavigate();
@@ -35,8 +40,25 @@ export default function Patients() {
     pageSize,
     totalCount,
   } = usePatientStore();
+  const { deletePatient } = usePatientStore();
+  const showToast = useUIStore((s) => s.showToast);
   const [searchInput, setSearchInput] = useState(filters.search);
   const [openAction, setOpenAction] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Patient | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    const { error } = await deletePatient(deleteTarget.id);
+    setDeleting(false);
+    if (error) {
+      showToast(error, 'error');
+    } else {
+      showToast('Paciente excluido com sucesso', 'success');
+    }
+    setDeleteTarget(null);
+  };
 
   useEffect(() => {
     fetchPatients();
@@ -229,6 +251,18 @@ export default function Patients() {
                                   <ClipboardList className="h-4 w-4" />
                                   Nova Avaliacao
                                 </button>
+                                <div className="border-t border-slate-800 my-1" />
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setOpenAction(null);
+                                    setDeleteTarget(patient);
+                                  }}
+                                  className="flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-slate-800 w-full text-left transition-colors"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                  Excluir
+                                </button>
                               </div>
                             </>
                           )}
@@ -282,6 +316,40 @@ export default function Patients() {
           </>
         )}
       </Card>
+
+      <Modal
+        open={!!deleteTarget}
+        onOpenChange={() => setDeleteTarget(null)}
+        title="Excluir Paciente"
+      >
+        <div className="space-y-4">
+          <div className="flex items-start gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+            <AlertTriangle className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm text-slate-200">
+                Tem certeza que deseja excluir <span className="font-semibold">{deleteTarget?.full_name}</span>?
+              </p>
+              <p className="text-xs text-slate-400 mt-1">
+                Todas as avaliacoes e fotos associadas tambem serao removidas. Esta acao nao pode ser desfeita.
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="secondary" size="sm" onClick={() => setDeleteTarget(null)}>
+              Cancelar
+            </Button>
+            <Button
+              size="sm"
+              loading={deleting}
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700 text-white border-red-600"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Excluir
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

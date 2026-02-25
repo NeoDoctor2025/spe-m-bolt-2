@@ -81,18 +81,8 @@ export default function Photos() {
       .upload(filePath, file);
 
     if (uploadError) {
-      const fileUrl = URL.createObjectURL(file);
-      const { error } = await supabase.from('patient_photos').insert({
-        patient_id: selectedPatientId,
-        user_id: user.id,
-        viewport,
-        file_url: fileUrl,
-        annotations_json: [],
-      });
-      if (error) {
-        showToast('Erro ao salvar foto', 'error');
-        return;
-      }
+      showToast('Erro ao enviar foto. Tente novamente.', 'error');
+      return;
     } else {
       const { data: urlData } = supabase.storage.from('patient-photos').getPublicUrl(filePath);
       await supabase.from('patient_photos').insert({
@@ -136,23 +126,36 @@ export default function Photos() {
 
   useEffect(() => { redrawAnnotation(); }, [redrawAnnotation]);
 
-  const openAnnotation = (photo: PatientPhoto) => {
-    setAnnotatingPhoto(photo);
-    setDrawOps((photo.annotations_json as unknown as DrawOp[]) ?? []);
-    setUndoStack([]);
-    setTimeout(() => {
+  useEffect(() => {
+    if (!annotatingPhoto) return;
+    let cancelled = false;
+
+    const tryInit = () => {
       const canvas = canvasRef.current;
-      if (!canvas) return;
+      if (!canvas) {
+        if (!cancelled) requestAnimationFrame(tryInit);
+        return;
+      }
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
+        if (cancelled) return;
         imgRef.current = img;
         canvas.width = img.width > 800 ? 800 : img.width;
         canvas.height = (canvas.width / img.width) * img.height;
         redrawAnnotation();
       };
-      img.src = photo.file_url;
-    }, 100);
+      img.src = annotatingPhoto.file_url;
+    };
+
+    requestAnimationFrame(tryInit);
+    return () => { cancelled = true; };
+  }, [annotatingPhoto, redrawAnnotation]);
+
+  const openAnnotation = (photo: PatientPhoto) => {
+    setAnnotatingPhoto(photo);
+    setDrawOps((photo.annotations_json as unknown as DrawOp[]) ?? []);
+    setUndoStack([]);
   };
 
   const getPoint = (e: React.MouseEvent<HTMLCanvasElement>): DrawPoint => {

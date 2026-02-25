@@ -9,7 +9,7 @@ import { Input, Textarea, Select } from '../components/ui/Input';
 import { patientSchema, type PatientFormData } from '../lib/validation';
 import { usePatientStore } from '../stores/patientStore';
 import { useUIStore } from '../stores/uiStore';
-import { BRAZILIAN_STATES } from '../data/mockData';
+import { BRAZILIAN_STATES } from '../data/constants';
 import { PageSkeleton } from '../components/ui/Skeleton';
 
 export default function PatientForm() {

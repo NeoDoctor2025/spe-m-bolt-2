@@ -21,6 +21,7 @@ import { Avatar } from '../components/ui/Avatar';
 import { PageSkeleton } from '../components/ui/Skeleton';
 import { usePatientStore } from '../stores/patientStore';
 import { useEvaluationStore } from '../stores/evaluationStore';
+import { useUIStore } from '../stores/uiStore';
 import { formatCPF, formatPhone, formatDate } from '../lib/utils';
 import type { Patient, Evaluation } from '../lib/types';
 
@@ -29,6 +30,7 @@ export default function PatientDetail() {
   const navigate = useNavigate();
   const { fetchPatientById } = usePatientStore();
   const { fetchEvaluations, evaluations, startEvaluation } = useEvaluationStore();
+  const showToast = useUIStore((s) => s.showToast);
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
   const [starting, setStarting] = useState(false);
@@ -52,7 +54,7 @@ export default function PatientDetail() {
     const { id: evalId, error } = await startEvaluation(id);
     setStarting(false);
     if (evalId) navigate(`/evaluations/${evalId}`);
-    else if (error) console.error(error);
+    else if (error) showToast(error, 'error');
   };
 
   if (loading) return <PageSkeleton />;
