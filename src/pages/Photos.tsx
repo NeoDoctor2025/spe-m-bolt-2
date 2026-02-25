@@ -1,0 +1,341 @@
+import { useEffect, useState, useRef, useCallback } from 'react';
+import {
+  Camera,
+  Upload,
+  Pen,
+  Eraser,
+  Undo2,
+  Redo2,
+  Trash2,
+  X,
+  Save,
+} from 'lucide-react';
+import { Card } from '../components/ui/Card';
+import { Button } from '../components/ui/Button';
+import { Select } from '../components/ui/Input';
+import { EmptyState } from '../components/ui/EmptyState';
+import { Modal } from '../components/ui/Modal';
+import { supabase } from '../lib/supabase';
+import { usePatientStore } from '../stores/patientStore';
+import { useUIStore } from '../stores/uiStore';
+import type { Patient, PatientPhoto } from '../lib/types';
+
+const VIEWPORTS = [
+  { key: 'Frontal', label: 'Frontal', gridArea: 'frontal' },
+  { key: 'Lateral_L', label: 'Lateral Esquerda', gridArea: 'latL' },
+  { key: 'Lateral_R', label: 'Lateral Direita', gridArea: 'latR' },
+  { key: 'Oblique_L', label: 'Obliqua Esquerda', gridArea: 'oblL' },
+  { key: 'Oblique_R', label: 'Obliqua Direita', gridArea: 'oblR' },
+] as const;
+
+const DRAW_COLORS = ['#ef4444', '#3b82f6', '#10b981', '#ffffff'];
+
+interface DrawPoint { x: number; y: number }
+interface DrawOp { type: 'pen' | 'eraser'; color: string; width: number; points: DrawPoint[] }
+
+export default function Photos() {
+  const { patients, fetchPatients } = usePatientStore();
+  const showToast = useUIStore((s) => s.showToast);
+  const [selectedPatientId, setSelectedPatientId] = useState('');
+  const [photos, setPhotos] = useState<PatientPhoto[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [annotatingPhoto, setAnnotatingPhoto] = useState<PatientPhoto | null>(null);
+
+  const [tool, setTool] = useState<'pen' | 'eraser'>('pen');
+  const [drawColor, setDrawColor] = useState(DRAW_COLORS[0]);
+  const [drawOps, setDrawOps] = useState<DrawOp[]>([]);
+  const [undoStack, setUndoStack] = useState<DrawOp[]>([]);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const currentOp = useRef<DrawOp | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    fetchPatients();
+  }, [fetchPatients]);
+
+  useEffect(() => {
+    if (selectedPatientId) {
+      setLoading(true);
+      supabase
+        .from('patient_photos')
+        .select('*')
+        .eq('patient_id', selectedPatientId)
+        .then(({ data }) => {
+          setPhotos((data as PatientPhoto[]) ?? []);
+          setLoading(false);
+        });
+    }
+  }, [selectedPatientId]);
+
+  const handleUpload = async (viewport: string, file: File) => {
+    if (!selectedPatientId) return;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const fileExt = file.name.split('.').pop();
+    const filePath = `${user.id}/${selectedPatientId}/${viewport}_${Date.now()}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('patient-photos')
+      .upload(filePath, file);
+
+    if (uploadError) {
+      const fileUrl = URL.createObjectURL(file);
+      const { error } = await supabase.from('patient_photos').insert({
+        patient_id: selectedPatientId,
+        user_id: user.id,
+        viewport,
+        file_url: fileUrl,
+        annotations_json: [],
+      });
+      if (error) {
+        showToast('Erro ao salvar foto', 'error');
+        return;
+      }
+    } else {
+      const { data: urlData } = supabase.storage.from('patient-photos').getPublicUrl(filePath);
+      await supabase.from('patient_photos').insert({
+        patient_id: selectedPatientId,
+        user_id: user.id,
+        viewport,
+        file_url: urlData.publicUrl,
+        annotations_json: [],
+      });
+    }
+
+    const { data } = await supabase
+      .from('patient_photos')
+      .select('*')
+      .eq('patient_id', selectedPatientId);
+    setPhotos((data as PatientPhoto[]) ?? []);
+    showToast('Foto enviada com sucesso', 'success');
+  };
+
+  const redrawAnnotation = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !imgRef.current) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(imgRef.current, 0, 0, canvas.width, canvas.height);
+    drawOps.forEach((op) => {
+      if (op.points.length < 2) return;
+      ctx.beginPath();
+      ctx.strokeStyle = op.type === 'eraser' ? '#000000' : op.color;
+      ctx.lineWidth = op.type === 'eraser' ? 20 : 3;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.globalCompositeOperation = op.type === 'eraser' ? 'destination-out' : 'source-over';
+      ctx.moveTo(op.points[0].x, op.points[0].y);
+      for (let i = 1; i < op.points.length; i++) ctx.lineTo(op.points[i].x, op.points[i].y);
+      ctx.stroke();
+      ctx.globalCompositeOperation = 'source-over';
+    });
+  }, [drawOps]);
+
+  useEffect(() => { redrawAnnotation(); }, [redrawAnnotation]);
+
+  const openAnnotation = (photo: PatientPhoto) => {
+    setAnnotatingPhoto(photo);
+    setDrawOps((photo.annotations_json as unknown as DrawOp[]) ?? []);
+    setUndoStack([]);
+    setTimeout(() => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        imgRef.current = img;
+        canvas.width = img.width > 800 ? 800 : img.width;
+        canvas.height = (canvas.width / img.width) * img.height;
+        redrawAnnotation();
+      };
+      img.src = photo.file_url;
+    }, 100);
+  };
+
+  const getPoint = (e: React.MouseEvent<HTMLCanvasElement>): DrawPoint => {
+    const r = canvasRef.current!.getBoundingClientRect();
+    const scaleX = canvasRef.current!.width / r.width;
+    const scaleY = canvasRef.current!.height / r.height;
+    return { x: (e.clientX - r.left) * scaleX, y: (e.clientY - r.top) * scaleY };
+  };
+
+  const onDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    setIsDrawing(true);
+    currentOp.current = { type: tool, color: drawColor, width: 3, points: [getPoint(e)] };
+  };
+  const onMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing || !currentOp.current) return;
+    currentOp.current.points.push(getPoint(e));
+    const ctx = canvasRef.current?.getContext('2d');
+    if (!ctx) return;
+    const pts = currentOp.current.points;
+    ctx.beginPath();
+    ctx.strokeStyle = tool === 'eraser' ? '#000' : drawColor;
+    ctx.lineWidth = tool === 'eraser' ? 20 : 3;
+    ctx.lineCap = 'round';
+    ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
+    ctx.moveTo(pts[pts.length - 2].x, pts[pts.length - 2].y);
+    ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+    ctx.stroke();
+    ctx.globalCompositeOperation = 'source-over';
+  };
+  const onUp = () => {
+    if (currentOp.current && currentOp.current.points.length > 1) {
+      setDrawOps((p) => [...p, currentOp.current!]);
+      setUndoStack([]);
+    }
+    currentOp.current = null;
+    setIsDrawing(false);
+  };
+
+  const saveAnnotations = async () => {
+    if (!annotatingPhoto) return;
+    await supabase
+      .from('patient_photos')
+      .update({ annotations_json: drawOps as unknown as PatientPhoto['annotations_json'] })
+      .eq('id', annotatingPhoto.id);
+    showToast('Anotacoes salvas', 'success');
+    setAnnotatingPhoto(null);
+  };
+
+  const getPhotoForViewport = (vp: string) => photos.find((p) => p.viewport === vp);
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-50">Fotos</h1>
+          <p className="text-sm text-slate-400 mt-1">Gerenciamento de fotos dos pacientes</p>
+        </div>
+      </div>
+
+      <Card>
+        <div className="max-w-xs">
+          <Select
+            label="Selecione o Paciente"
+            placeholder="Escolha um paciente"
+            options={patients.map((p: Patient) => ({ label: p.full_name, value: p.id }))}
+            value={selectedPatientId}
+            onChange={(e) => setSelectedPatientId(e.target.value)}
+          />
+        </div>
+      </Card>
+
+      {!selectedPatientId ? (
+        <EmptyState
+          icon={<Camera className="h-12 w-12" />}
+          title="Selecione um paciente"
+          description="Escolha um paciente para visualizar e gerenciar fotos"
+        />
+      ) : loading ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="aspect-[3/4] rounded-lg bg-slate-800 animate-pulse" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {VIEWPORTS.map((vp) => {
+            const photo = getPhotoForViewport(vp.key);
+            return (
+              <div key={vp.key} className="space-y-2">
+                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider text-center">
+                  {vp.label}
+                </p>
+                {photo ? (
+                  <div
+                    className="relative aspect-[3/4] rounded-lg overflow-hidden border border-slate-800 group cursor-pointer"
+                    onClick={() => openAnnotation(photo)}
+                  >
+                    <img
+                      src={photo.file_url}
+                      alt={vp.label}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Pen className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                ) : (
+                  <label className="flex flex-col items-center justify-center aspect-[3/4] rounded-lg border-2 border-dashed border-slate-700 hover:border-slate-600 cursor-pointer transition-colors bg-slate-900/50">
+                    <Upload className="h-8 w-8 text-slate-600 mb-2" />
+                    <span className="text-xs text-slate-500">Arraste ou clique</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleUpload(vp.key, file);
+                      }}
+                    />
+                  </label>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <Modal
+        open={!!annotatingPhoto}
+        onOpenChange={() => setAnnotatingPhoto(null)}
+        title="Anotar Foto"
+        maxWidth="max-w-4xl"
+      >
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Button variant={tool === 'pen' ? 'primary' : 'ghost'} size="sm" onClick={() => setTool('pen')}>
+                <Pen className="h-3.5 w-3.5" />
+              </Button>
+              <Button variant={tool === 'eraser' ? 'primary' : 'ghost'} size="sm" onClick={() => setTool('eraser')}>
+                <Eraser className="h-3.5 w-3.5" />
+              </Button>
+              <div className="w-px h-6 bg-slate-700 mx-1" />
+              {DRAW_COLORS.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => { setDrawColor(c); setTool('pen'); }}
+                  className={`w-5 h-5 rounded-full border-2 ${drawColor === c && tool === 'pen' ? 'border-white' : 'border-slate-600'}`}
+                  style={{ backgroundColor: c }}
+                />
+              ))}
+              <div className="w-px h-6 bg-slate-700 mx-1" />
+              <Button variant="ghost" size="sm" onClick={() => { if (drawOps.length) { setUndoStack((u) => [...u, drawOps[drawOps.length - 1]]); setDrawOps((o) => o.slice(0, -1)); } }}>
+                <Undo2 className="h-3.5 w-3.5" />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => { if (undoStack.length) { setDrawOps((o) => [...o, undoStack[undoStack.length - 1]]); setUndoStack((u) => u.slice(0, -1)); } }}>
+                <Redo2 className="h-3.5 w-3.5" />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => { setDrawOps([]); setUndoStack([]); }}>
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setAnnotatingPhoto(null)}>
+                <X className="h-3.5 w-3.5" /> Cancelar
+              </Button>
+              <Button size="sm" onClick={saveAnnotations}>
+                <Save className="h-3.5 w-3.5" /> Salvar
+              </Button>
+            </div>
+          </div>
+          <div className="bg-slate-950 rounded-lg overflow-hidden cursor-crosshair">
+            <canvas
+              ref={canvasRef}
+              className="block w-full"
+              onMouseDown={onDown}
+              onMouseMove={onMove}
+              onMouseUp={onUp}
+              onMouseLeave={onUp}
+            />
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+}

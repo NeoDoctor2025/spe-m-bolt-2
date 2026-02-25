@@ -1,0 +1,103 @@
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Link, useNavigate } from 'react-router-dom';
+import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { AuthLayout } from '../components/layout/AuthLayout';
+import { Button } from '../components/ui/Button';
+import { Input } from '../components/ui/Input';
+import { loginSchema, type LoginFormData } from '../lib/validation';
+import { useAuthStore } from '../stores/authStore';
+import { useUIStore } from '../stores/uiStore';
+
+export default function Login() {
+  const navigate = useNavigate();
+  const { signIn, loading } = useAuthStore();
+  const showToast = useUIStore((s) => s.showToast);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
+    const { error } = await signIn(data.email, data.password);
+    if (error) {
+      showToast(error, 'error');
+    } else {
+      navigate('/dashboard');
+    }
+  };
+
+  return (
+    <AuthLayout>
+      <div>
+        <h2 className="text-2xl font-bold text-slate-50 mb-1">Entrar</h2>
+        <p className="text-sm text-slate-400 mb-8">
+          Acesse sua conta para continuar
+        </p>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <Input
+            label="E-mail"
+            type="email"
+            placeholder="seu@email.com"
+            icon={<Mail className="h-4 w-4" />}
+            error={errors.email?.message}
+            {...register('email')}
+          />
+
+          <div className="relative">
+            <Input
+              label="Senha"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Sua senha"
+              icon={<Lock className="h-4 w-4" />}
+              error={errors.password?.message}
+              {...register('password')}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-[38px] text-slate-500 hover:text-slate-300 transition-colors"
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                className="w-4 h-4 rounded border-slate-700 bg-slate-800 text-blue-600 focus:ring-blue-600 focus:ring-offset-0"
+              />
+              <span className="text-sm text-slate-400">Lembrar-me</span>
+            </label>
+            <Link
+              to="/forgot-password"
+              className="text-sm text-blue-500 hover:text-blue-400 transition-colors"
+            >
+              Esqueceu a senha?
+            </Link>
+          </div>
+
+          <Button type="submit" loading={loading} className="w-full">
+            <LogIn className="h-4 w-4" />
+            Entrar
+          </Button>
+        </form>
+
+        <p className="text-center text-sm text-slate-500 mt-6">
+          Nao tem uma conta?{' '}
+          <Link to="/register" className="text-blue-500 hover:text-blue-400 transition-colors font-medium">
+            Criar conta
+          </Link>
+        </p>
+      </div>
+    </AuthLayout>
+  );
+}
