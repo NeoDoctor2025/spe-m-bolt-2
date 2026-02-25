@@ -37,7 +37,7 @@ export default function ForgotPassword() {
       <div>
         <Link
           to="/login"
-          className="inline-flex items-center gap-1.5 text-sm text-editorial-muted hover:text-editorial-navy transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-sm text-editorial-muted hover:text-editorial-navy dark:hover:text-editorial-cream transition-colors mb-6"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar ao login
@@ -48,7 +48,7 @@ export default function ForgotPassword() {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-editorial-sage-light mb-4">
               <CheckCircle2 className="h-8 w-8 text-editorial-sage" />
             </div>
-            <h2 className="text-2xl font-bold font-serif text-editorial-navy mb-2">E-mail Enviado</h2>
+            <h2 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream mb-2">E-mail Enviado</h2>
             <p className="text-sm text-editorial-muted max-w-sm mx-auto">
               Verifique sua caixa de entrada para redefinir sua senha. O link expira em 24 horas.
             </p>
@@ -60,7 +60,7 @@ export default function ForgotPassword() {
           </div>
         ) : (
           <>
-            <h2 className="text-2xl font-bold font-serif text-editorial-navy mb-1">Recuperar Senha</h2>
+            <h2 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream mb-1">Recuperar Senha</h2>
             <p className="text-sm text-editorial-muted mb-8">
               Informe seu e-mail para receber o link de recuperacao
             </p>

@@ -3,7 +3,7 @@ import { Navbar } from './Navbar';
 
 export function AppLayout() {
   return (
-    <div className="min-h-screen bg-editorial-paper editorial-grid relative">
+    <div className="min-h-screen bg-editorial-paper dark:bg-editorial-navy-dark editorial-grid relative transition-colors duration-300">
       <div className="watermark-rb" aria-hidden="true">S</div>
       <Navbar />
       <main className="pt-16 relative z-10">

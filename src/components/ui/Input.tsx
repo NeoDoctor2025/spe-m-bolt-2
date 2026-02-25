@@ -11,7 +11,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="space-y-1.5">
         {label && (
-          <label className="block text-sm font-medium text-editorial-navy">
+          <label className="block text-sm font-medium text-editorial-navy dark:text-editorial-cream">
             {label}
           </label>
         )}
@@ -23,7 +23,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
           <input
             ref={ref}
-            className={`w-full h-10 rounded border border-editorial-cream bg-white text-editorial-navy text-sm placeholder:text-editorial-warm focus:outline-none focus:ring-2 focus:ring-editorial-gold/40 focus:border-editorial-gold transition-colors ${
+            className={`w-full h-10 rounded border border-editorial-cream dark:border-editorial-navy-light/30 bg-white dark:bg-editorial-navy/40 text-editorial-navy dark:text-editorial-cream text-sm placeholder:text-editorial-warm dark:placeholder:text-editorial-muted focus:outline-none focus:ring-2 focus:ring-editorial-gold/40 focus:border-editorial-gold transition-colors ${
               icon ? 'pl-10 pr-3' : 'px-3'
             } ${error ? 'border-editorial-rose focus:ring-editorial-rose/40' : ''} ${className}`}
             {...props}
@@ -47,13 +47,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="space-y-1.5">
         {label && (
-          <label className="block text-sm font-medium text-editorial-navy">
+          <label className="block text-sm font-medium text-editorial-navy dark:text-editorial-cream">
             {label}
           </label>
         )}
         <textarea
           ref={ref}
-          className={`w-full rounded border border-editorial-cream bg-white text-editorial-navy text-sm placeholder:text-editorial-warm focus:outline-none focus:ring-2 focus:ring-editorial-gold/40 focus:border-editorial-gold transition-colors px-3 py-2 min-h-[80px] resize-y ${
+          className={`w-full rounded border border-editorial-cream dark:border-editorial-navy-light/30 bg-white dark:bg-editorial-navy/40 text-editorial-navy dark:text-editorial-cream text-sm placeholder:text-editorial-warm dark:placeholder:text-editorial-muted focus:outline-none focus:ring-2 focus:ring-editorial-gold/40 focus:border-editorial-gold transition-colors px-3 py-2 min-h-[80px] resize-y ${
             error ? 'border-editorial-rose focus:ring-editorial-rose/40' : ''
           } ${className}`}
           {...props}
@@ -78,13 +78,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="space-y-1.5">
         {label && (
-          <label className="block text-sm font-medium text-editorial-navy">
+          <label className="block text-sm font-medium text-editorial-navy dark:text-editorial-cream">
             {label}
           </label>
         )}
         <select
           ref={ref}
-          className={`w-full h-10 rounded border border-editorial-cream bg-white text-editorial-navy text-sm focus:outline-none focus:ring-2 focus:ring-editorial-gold/40 focus:border-editorial-gold transition-colors px-3 ${
+          className={`w-full h-10 rounded border border-editorial-cream dark:border-editorial-navy-light/30 bg-white dark:bg-editorial-navy/40 text-editorial-navy dark:text-editorial-cream text-sm focus:outline-none focus:ring-2 focus:ring-editorial-gold/40 focus:border-editorial-gold transition-colors px-3 ${
             error ? 'border-editorial-rose focus:ring-editorial-rose/40' : ''
           } ${className}`}
           {...props}

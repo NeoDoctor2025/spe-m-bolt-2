@@ -129,8 +129,8 @@ export function AnatomicalCanvas() {
   }, [operations, redrawCanvas]);
 
   return (
-    <div className="bg-editorial-light border border-editorial-cream rounded-lg overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-editorial-cream bg-editorial-light-hover">
+    <div className="bg-editorial-light dark:bg-editorial-navy/60 border border-editorial-cream dark:border-editorial-navy-light/20 rounded-lg overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-editorial-cream dark:border-editorial-navy-light/20 bg-editorial-light-hover">
         <div className="flex items-center gap-2">
           <Button
             variant={tool === 'pen' ? 'primary' : 'ghost'}
@@ -147,7 +147,7 @@ export function AnatomicalCanvas() {
             <Eraser className="h-3.5 w-3.5" />
           </Button>
 
-          <div className="w-px h-6 bg-editorial-cream mx-1" />
+          <div className="w-px h-6 bg-editorial-cream dark:bg-editorial-navy-light/30 mx-1" />
 
           {COLORS.map((c) => (
             <button
@@ -160,14 +160,14 @@ export function AnatomicalCanvas() {
             />
           ))}
 
-          <div className="w-px h-6 bg-editorial-cream mx-1" />
+          <div className="w-px h-6 bg-editorial-cream dark:bg-editorial-navy-light/30 mx-1" />
 
           {LINE_WIDTHS.map((w) => (
             <button
               key={w}
               onClick={() => setLineWidth(w)}
               className={`w-7 h-7 rounded flex items-center justify-center transition-colors ${
-                lineWidth === w ? 'bg-editorial-cream' : 'hover:bg-editorial-cream/40'
+                lineWidth === w ? 'bg-editorial-cream dark:bg-editorial-navy-light/30' : 'hover:bg-editorial-cream/40 dark:hover:bg-white/5'
               }`}
             >
               <div className="rounded-full bg-editorial-navy-light" style={{ width: w * 2, height: w * 2 }} />
@@ -188,7 +188,7 @@ export function AnatomicalCanvas() {
         </div>
       </div>
 
-      <div className="bg-editorial-paper cursor-crosshair">
+      <div className="bg-editorial-paper dark:bg-editorial-navy-dark cursor-crosshair">
         <canvas
           ref={canvasRef}
           onMouseDown={handleMouseDown}

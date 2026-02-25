@@ -24,11 +24,11 @@ export function Modal({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-editorial-navy/30 backdrop-blur-sm z-50 animate-fade-in" />
         <Dialog.Content
-          className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${maxWidth} w-[calc(100%-2rem)] bg-editorial-light border border-editorial-cream rounded-xl p-6 shadow-lg z-50 animate-slide-up focus:outline-none`}
+          className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${maxWidth} w-[calc(100%-2rem)] bg-editorial-light dark:bg-editorial-navy border border-editorial-cream dark:border-editorial-navy-light/20 rounded-xl p-6 shadow-lg z-50 animate-slide-up focus:outline-none`}
         >
           <div className="flex items-start justify-between mb-4">
             <div>
-              <Dialog.Title className="text-lg font-semibold font-serif text-editorial-navy">
+              <Dialog.Title className="text-lg font-semibold font-serif text-editorial-navy dark:text-editorial-cream">
                 {title}
               </Dialog.Title>
               {description && (
@@ -37,7 +37,7 @@ export function Modal({
                 </Dialog.Description>
               )}
             </div>
-            <Dialog.Close className="text-editorial-muted hover:text-editorial-navy transition-colors focus-ring rounded-lg p-1">
+            <Dialog.Close className="text-editorial-muted hover:text-editorial-navy dark:hover:text-editorial-cream transition-colors focus-ring rounded-lg p-1">
               <X className="h-5 w-5" />
             </Dialog.Close>
           </div>

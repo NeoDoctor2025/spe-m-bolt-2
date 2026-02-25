@@ -34,7 +34,7 @@ export function EvalScoreSidebar({ getTotalScore, getStepScore, getStepMaxScore 
       : '#9B4D4D';
 
   return (
-    <div className="bg-editorial-light border border-editorial-cream rounded-lg p-6 space-y-6 sticky top-24">
+    <div className="bg-editorial-light dark:bg-editorial-navy/60 border border-editorial-cream dark:border-editorial-navy-light/20 rounded-lg p-6 space-y-6 sticky top-24">
       <div>
         <h3 className="text-sm font-semibold font-serif text-editorial-navy-light uppercase tracking-wider mb-4">
           Score Total
@@ -57,18 +57,18 @@ export function EvalScoreSidebar({ getTotalScore, getStepScore, getStepMaxScore 
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold font-serif text-editorial-navy">{percentage}%</span>
+              <span className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">{percentage}%</span>
               <span className="text-xs text-editorial-muted">{totalScore}/{totalMax}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-editorial-cream pt-4">
+      <div className="border-t border-editorial-cream dark:border-editorial-navy-light/20 pt-4">
         <p className={`text-sm font-medium ${risk.color}`}>{risk.label}</p>
       </div>
 
-      <div className="border-t border-editorial-cream pt-4 space-y-3">
+      <div className="border-t border-editorial-cream dark:border-editorial-navy-light/20 pt-4 space-y-3">
         <h4 className="text-xs font-semibold text-editorial-muted uppercase tracking-wider">
           Detalhamento por Etapa
         </h4>
@@ -85,7 +85,7 @@ export function EvalScoreSidebar({ getTotalScore, getStepScore, getStepMaxScore 
                   {score}/{max}
                 </span>
               </div>
-              <div className="h-1.5 bg-editorial-cream rounded-full overflow-hidden">
+              <div className="h-1.5 bg-editorial-cream dark:bg-editorial-navy-light/30 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-500"
                   style={{

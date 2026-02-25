@@ -210,7 +210,7 @@ export default function Photos() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold font-serif text-editorial-navy">Fotos</h1>
+          <h1 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">Fotos</h1>
           <p className="text-sm text-editorial-muted mt-1">Gerenciamento de fotos dos pacientes</p>
         </div>
       </div>
@@ -236,7 +236,7 @@ export default function Photos() {
       ) : loading ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="aspect-[3/4] rounded-lg bg-editorial-cream animate-pulse" />
+            <div key={i} className="aspect-[3/4] rounded-lg bg-editorial-cream animate-pulse dark:bg-editorial-navy-light/30" />
           ))}
         </div>
       ) : (
@@ -250,7 +250,7 @@ export default function Photos() {
                 </p>
                 {photo ? (
                   <div
-                    className="relative aspect-[3/4] rounded-lg overflow-hidden border border-editorial-cream group cursor-pointer"
+                    className="relative aspect-[3/4] rounded-lg overflow-hidden border border-editorial-cream dark:border-editorial-navy-light/20 group cursor-pointer"
                     onClick={() => openAnnotation(photo)}
                   >
                     <img
@@ -263,7 +263,7 @@ export default function Photos() {
                     </div>
                   </div>
                 ) : (
-                  <label className="flex flex-col items-center justify-center aspect-[3/4] rounded-lg border-2 border-dashed border-editorial-gold hover:border-editorial-gold-light cursor-pointer transition-colors bg-editorial-light/50">
+                  <label className="flex flex-col items-center justify-center aspect-[3/4] rounded-lg border-2 border-dashed border-editorial-gold hover:border-editorial-gold-light cursor-pointer transition-colors bg-editorial-light/50 dark:bg-editorial-navy/30">
                     <Upload className="h-8 w-8 text-editorial-warm mb-2" />
                     <span className="text-xs text-editorial-muted">Arraste ou clique</span>
                     <input
@@ -298,7 +298,7 @@ export default function Photos() {
               <Button variant={tool === 'eraser' ? 'primary' : 'ghost'} size="sm" onClick={() => setTool('eraser')}>
                 <Eraser className="h-3.5 w-3.5" />
               </Button>
-              <div className="w-px h-6 bg-editorial-cream mx-1" />
+              <div className="w-px h-6 bg-editorial-cream dark:bg-editorial-navy-light/30 mx-1" />
               {DRAW_COLORS.map((c) => (
                 <button
                   key={c}
@@ -307,7 +307,7 @@ export default function Photos() {
                   style={{ backgroundColor: c }}
                 />
               ))}
-              <div className="w-px h-6 bg-editorial-cream mx-1" />
+              <div className="w-px h-6 bg-editorial-cream dark:bg-editorial-navy-light/30 mx-1" />
               <Button variant="ghost" size="sm" onClick={() => { if (drawOps.length) { setUndoStack((u) => [...u, drawOps[drawOps.length - 1]]); setDrawOps((o) => o.slice(0, -1)); } }}>
                 <Undo2 className="h-3.5 w-3.5" />
               </Button>
@@ -327,7 +327,7 @@ export default function Photos() {
               </Button>
             </div>
           </div>
-          <div className="bg-editorial-paper rounded-lg overflow-hidden cursor-crosshair">
+          <div className="bg-editorial-paper dark:bg-editorial-navy-dark rounded-lg overflow-hidden cursor-crosshair">
             <canvas
               ref={canvasRef}
               className="block w-full"

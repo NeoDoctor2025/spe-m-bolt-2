@@ -53,22 +53,22 @@ export default function Settings() {
   return (
     <div className="space-y-6 animate-fade-in max-w-3xl">
       <div>
-        <h1 className="text-2xl font-bold font-serif text-editorial-navy">Configuracoes</h1>
+        <h1 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">Configuracoes</h1>
         <p className="text-sm text-editorial-muted mt-1">Gerencie seu perfil e configuracoes da clinica</p>
       </div>
 
       <Tabs.Root defaultValue="profile">
-        <Tabs.List className="flex gap-1 border-b border-editorial-cream pb-px mb-6">
+        <Tabs.List className="flex gap-1 border-b border-editorial-cream dark:border-editorial-navy-light/20 pb-px mb-6">
           <Tabs.Trigger
             value="profile"
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-editorial-muted border-b-2 border-transparent transition-colors data-[state=active]:text-editorial-gold data-[state=active]:border-editorial-gold hover:text-editorial-navy focus-ring rounded-t-lg"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-editorial-muted border-b-2 border-transparent transition-colors data-[state=active]:text-editorial-gold data-[state=active]:border-editorial-gold hover:text-editorial-navy dark:hover:text-editorial-cream focus-ring rounded-t-lg"
           >
             <User className="h-4 w-4" />
             Perfil
           </Tabs.Trigger>
           <Tabs.Trigger
             value="clinic"
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-editorial-muted border-b-2 border-transparent transition-colors data-[state=active]:text-editorial-gold data-[state=active]:border-editorial-gold hover:text-editorial-navy focus-ring rounded-t-lg"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-editorial-muted border-b-2 border-transparent transition-colors data-[state=active]:text-editorial-gold data-[state=active]:border-editorial-gold hover:text-editorial-navy dark:hover:text-editorial-cream focus-ring rounded-t-lg"
           >
             <Building2 className="h-4 w-4" />
             Clinica
@@ -81,7 +81,7 @@ export default function Settings() {
               <div className="flex items-center gap-4 mb-6">
                 <Avatar name={profile.full_name ?? 'U'} size="xl" />
                 <div>
-                  <p className="text-lg font-semibold text-editorial-navy">{profile.full_name}</p>
+                  <p className="text-lg font-semibold text-editorial-navy dark:text-editorial-cream">{profile.full_name}</p>
                   <p className="text-sm text-editorial-muted">{profile.email}</p>
                 </div>
               </div>

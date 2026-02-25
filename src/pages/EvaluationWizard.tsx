@@ -128,12 +128,12 @@ export default function EvaluationWizard() {
 
   return (
     <div className="animate-fade-in">
-      <div className="sticky top-16 z-30 bg-editorial-paper/95 backdrop-blur-sm -mx-4 lg:-mx-6 px-4 lg:px-6 py-4 border-b border-editorial-cream mb-6">
+      <div className="sticky top-16 z-30 bg-editorial-paper/95 dark:bg-editorial-navy-dark/95 backdrop-blur-sm -mx-4 lg:-mx-6 px-4 lg:px-6 py-4 border-b border-editorial-cream dark:border-editorial-navy-light/20 mb-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(-1)}
-              className="p-2 rounded-lg text-editorial-muted hover:text-editorial-navy hover:bg-editorial-cream/40 transition-colors"
+              className="p-2 rounded-lg text-editorial-muted hover:text-editorial-navy dark:hover:text-editorial-cream hover:bg-editorial-cream/40 dark:hover:bg-white/5 transition-colors"
             >
               <ArrowLeft className="h-5 w-5" />
             </button>
@@ -141,7 +141,7 @@ export default function EvaluationWizard() {
               <div className="flex items-center gap-3">
                 <Avatar name={patient.full_name} size="sm" />
                 <div>
-                  <p className="text-sm font-medium text-editorial-navy">{patient.full_name}</p>
+                  <p className="text-sm font-medium text-editorial-navy dark:text-editorial-cream">{patient.full_name}</p>
                   <p className="text-xs text-editorial-muted">{formatCPF(patient.cpf)}</p>
                 </div>
                 <Badge variant={getClassificationBadgeVariant(patient.classification)}>
@@ -171,7 +171,7 @@ export default function EvaluationWizard() {
           {step && (
             <>
               <div className="mb-4">
-                <h2 className="text-xl font-bold font-serif text-editorial-navy">{step.title}</h2>
+                <h2 className="text-xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">{step.title}</h2>
                 <p className="text-sm text-editorial-muted mt-1">{step.description}</p>
               </div>
 
@@ -193,7 +193,7 @@ export default function EvaluationWizard() {
                 </Card>
               )}
 
-              <div className="flex items-center justify-between pt-4 border-t border-editorial-cream">
+              <div className="flex items-center justify-between pt-4 border-t border-editorial-cream dark:border-editorial-navy-light/20">
                 <Button
                   variant="secondary"
                   onClick={handlePrev}
@@ -238,10 +238,10 @@ export default function EvaluationWizard() {
         maxWidth="max-w-xl"
       >
         <div className="space-y-4 mt-4">
-          <div className="bg-editorial-cream/50 rounded-lg p-4">
+          <div className="bg-editorial-cream/50 dark:bg-editorial-navy-light/20 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm text-editorial-muted">Score Total</span>
-              <span className="text-2xl font-bold font-serif text-editorial-navy">
+              <span className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">
                 {getTotalMaxScore() > 0
                   ? Math.round((getTotalScore() / getTotalMaxScore()) * 100)
                   : 0}
@@ -259,12 +259,12 @@ export default function EvaluationWizard() {
             return (
               <div key={s.id} className="flex items-center justify-between text-sm">
                 <span className="text-editorial-muted">{s.title}</span>
-                <span className="text-editorial-navy font-medium">{score}/{max}</span>
+                <span className="text-editorial-navy dark:text-editorial-cream font-medium">{score}/{max}</span>
               </div>
             );
           })}
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-editorial-cream">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-editorial-cream dark:border-editorial-navy-light/20">
             <Button variant="secondary" onClick={() => setShowComplete(false)}>
               Revisar
             </Button>

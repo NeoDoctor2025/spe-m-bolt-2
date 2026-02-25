@@ -67,7 +67,7 @@ export default function Register() {
   return (
     <AuthLayout>
       <div>
-        <h2 className="text-2xl font-bold font-serif text-editorial-navy mb-1">Criar Conta</h2>
+        <h2 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream mb-1">Criar Conta</h2>
         <p className="text-sm text-editorial-muted mb-8">
           Registre-se para acessar a plataforma
         </p>
@@ -110,7 +110,7 @@ export default function Register() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-[38px] text-editorial-muted hover:text-editorial-navy transition-colors"
+              className="absolute right-3 top-[38px] text-editorial-muted hover:text-editorial-navy dark:hover:text-editorial-cream transition-colors"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -123,13 +123,13 @@ export default function Register() {
                   <div
                     key={i}
                     className={`h-1 flex-1 rounded-full transition-colors ${
-                      i <= passwordStrength.level ? passwordStrength.color : 'bg-editorial-cream'
+                      i <= passwordStrength.level ? passwordStrength.color : 'bg-editorial-cream dark:bg-editorial-navy-light/30'
                     }`}
                   />
                 ))}
               </div>
               <p className="text-xs text-editorial-muted">
-                Forca: <span className="text-editorial-navy">{passwordStrength.label}</span>
+                Forca: <span className="text-editorial-navy dark:text-editorial-cream">{passwordStrength.label}</span>
               </p>
             </div>
           )}

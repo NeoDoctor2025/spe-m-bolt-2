@@ -26,14 +26,14 @@ export function ToastContainer() {
         return (
           <div
             key={toast.id}
-            className={`flex items-center gap-3 px-4 py-3 rounded border border-editorial-cream bg-white shadow-lg min-w-[300px] border-l-[3px] transition-all duration-300 ${
+            className={`flex items-center gap-3 px-4 py-3 rounded border border-editorial-cream dark:border-editorial-navy-light/20 bg-white dark:bg-editorial-navy shadow-lg min-w-[300px] border-l-[3px] transition-all duration-300 ${
               toast.dismissing
                 ? 'opacity-0 translate-y-2'
                 : 'opacity-100 translate-y-0 animate-slide-up'
             } ${styles}`}
           >
             <Icon className="h-5 w-5 shrink-0" />
-            <span className="text-sm flex-1 text-editorial-navy">{toast.message}</span>
+            <span className="text-sm flex-1 text-editorial-navy dark:text-editorial-cream">{toast.message}</span>
             <button
               onClick={() => dismissToast(toast.id)}
               className="text-editorial-muted opacity-60 hover:opacity-100 transition-opacity"

@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <AuthLayout>
       <div>
-        <h2 className="text-2xl font-bold font-serif text-editorial-navy mb-1">Entrar</h2>
+        <h2 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream mb-1">Entrar</h2>
         <p className="text-sm text-editorial-muted mb-8">
           Acesse sua conta para continuar
         </p>
@@ -63,7 +63,7 @@ export default function Login() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-[38px] text-editorial-muted hover:text-editorial-navy transition-colors"
+              className="absolute right-3 top-[38px] text-editorial-muted hover:text-editorial-navy dark:hover:text-editorial-cream transition-colors"
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -73,7 +73,7 @@ export default function Login() {
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-editorial-cream bg-white text-editorial-gold focus:ring-editorial-gold focus:ring-offset-0"
+                className="w-4 h-4 rounded border-editorial-cream dark:border-editorial-navy-light/30 bg-white text-editorial-gold focus:ring-editorial-gold focus:ring-offset-0"
               />
               <span className="text-sm text-editorial-muted">Lembrar-me</span>
             </label>

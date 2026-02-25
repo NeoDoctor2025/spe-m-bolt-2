@@ -147,7 +147,7 @@ export default function Help() {
   return (
     <div className="space-y-6 animate-fade-in max-w-3xl">
       <div>
-        <h1 className="text-2xl font-bold font-serif text-editorial-navy">Central de Ajuda</h1>
+        <h1 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">Central de Ajuda</h1>
         <p className="text-sm text-editorial-muted mt-1">Encontre respostas para suas duvidas</p>
       </div>
 
@@ -168,12 +168,12 @@ export default function Help() {
           {filteredSections.map((section) => (
             <Card key={section.title} padding={false}>
               <div className="px-6 pt-5 pb-3">
-                <h2 className="text-base font-semibold font-serif text-editorial-navy">{section.title}</h2>
+                <h2 className="text-base font-semibold font-serif text-editorial-navy dark:text-editorial-cream">{section.title}</h2>
               </div>
-              <Accordion.Root type="multiple" className="divide-y divide-editorial-cream">
+              <Accordion.Root type="multiple" className="divide-y divide-editorial-cream dark:divide-editorial-navy-light/20">
                 {section.items.map((item, index) => (
                   <Accordion.Item key={index} value={`${section.title}-${index}`}>
-                    <Accordion.Trigger className="flex items-center justify-between w-full px-6 py-4 text-left text-sm text-editorial-navy/80 hover:text-editorial-navy transition-colors group">
+                    <Accordion.Trigger className="flex items-center justify-between w-full px-6 py-4 text-left text-sm text-editorial-navy/80 dark:text-editorial-cream/80 hover:text-editorial-navy dark:hover:text-editorial-cream transition-colors group">
                       <span>{item.question}</span>
                       <ChevronDown className="h-4 w-4 text-editorial-muted shrink-0 ml-4 transition-transform group-data-[state=open]:rotate-180" />
                     </Accordion.Trigger>
@@ -192,7 +192,7 @@ export default function Help() {
 
       <Card className="text-center">
         <Mail className="h-8 w-8 text-editorial-warm mx-auto mb-3" />
-        <h3 className="text-base font-semibold font-serif text-editorial-navy mb-1">Precisa de mais ajuda?</h3>
+        <h3 className="text-base font-semibold font-serif text-editorial-navy dark:text-editorial-cream mb-1">Precisa de mais ajuda?</h3>
         <p className="text-sm text-editorial-muted mb-4">
           Entre em contato com nossa equipe de suporte
         </p>

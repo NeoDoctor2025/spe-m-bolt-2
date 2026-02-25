@@ -20,13 +20,13 @@ export default function Evaluations() {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold font-serif text-editorial-navy">Avaliacoes</h1>
+        <h1 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">Avaliacoes</h1>
         <p className="text-sm text-editorial-muted mt-1">Todas as avaliacoes realizadas</p>
       </div>
 
       <Card padding={false}>
         {loading ? (
-          <div className="divide-y divide-editorial-cream">
+          <div className="divide-y divide-editorial-cream dark:divide-editorial-navy-light/20">
             {[...Array(6)].map((_, i) => (
               <TableRowSkeleton key={i} />
             ))}
@@ -40,7 +40,7 @@ export default function Evaluations() {
         ) : (
           <table className="w-full">
             <thead>
-              <tr className="border-b border-editorial-cream">
+              <tr className="border-b border-editorial-cream dark:border-editorial-navy-light/20">
                 <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">
                   Paciente
                 </th>
@@ -59,14 +59,14 @@ export default function Evaluations() {
               {evaluations.map((ev) => (
                 <tr
                   key={ev.id}
-                  className="border-b border-editorial-cream/50 hover:bg-editorial-cream/40 transition-colors cursor-pointer"
+                  className="border-b border-editorial-cream/50 hover:bg-editorial-cream/40 dark:hover:bg-white/5 transition-colors cursor-pointer"
                   onClick={() => navigate(`/evaluations/${ev.id}`)}
                 >
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
                       <Avatar name={ev.patient?.full_name ?? 'P'} size="sm" />
                       <div>
-                        <p className="text-sm font-medium text-editorial-navy">
+                        <p className="text-sm font-medium text-editorial-navy dark:text-editorial-cream">
                           {ev.patient?.full_name ?? 'Paciente'}
                         </p>
                         <p className="text-xs text-editorial-muted">{ev.patient?.cpf}</p>
@@ -81,7 +81,7 @@ export default function Evaluations() {
                   </td>
                   <td className="px-6 py-3 text-right">
                     {ev.status === 'Concluido' ? (
-                      <span className="text-sm font-semibold font-serif text-editorial-navy">
+                      <span className="text-sm font-semibold font-serif text-editorial-navy dark:text-editorial-cream">
                         {ev.max_score > 0 ? Math.round((ev.total_score / ev.max_score) * 100) : 0}%
                       </span>
                     ) : (

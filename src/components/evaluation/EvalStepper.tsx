@@ -23,7 +23,7 @@ export function EvalStepper({ currentStep, onStepClick, answeredSteps }: EvalSte
                   ? 'bg-editorial-gold/10 text-editorial-gold border border-editorial-gold/30'
                   : isCompleted
                   ? 'bg-editorial-sage-light text-editorial-sage border border-editorial-sage/20'
-                  : 'text-editorial-muted hover:text-editorial-navy-light hover:bg-editorial-cream/40 border border-transparent'
+                  : 'text-editorial-muted hover:text-editorial-navy-light hover:bg-editorial-cream/40 dark:hover:bg-white/5 border border-transparent'
               }`}
             >
               <div
@@ -32,7 +32,7 @@ export function EvalStepper({ currentStep, onStepClick, answeredSteps }: EvalSte
                     ? 'bg-editorial-gold text-white'
                     : isCompleted
                     ? 'bg-editorial-sage text-white'
-                    : 'bg-editorial-cream text-editorial-muted'
+                    : 'bg-editorial-cream dark:bg-editorial-navy-light/30 text-editorial-muted'
                 }`}
               >
                 {isCompleted ? <Check className="h-3.5 w-3.5" /> : index + 1}
@@ -42,7 +42,7 @@ export function EvalStepper({ currentStep, onStepClick, answeredSteps }: EvalSte
             {index < EVALUATION_STEPS.length - 1 && (
               <div
                 className={`w-4 lg:w-8 h-px mx-0.5 shrink-0 ${
-                  isCompleted ? 'bg-editorial-sage/40' : 'bg-editorial-cream'
+                  isCompleted ? 'bg-editorial-sage/40' : 'bg-editorial-cream dark:bg-editorial-navy-light/30'
                 }`}
               />
             )}

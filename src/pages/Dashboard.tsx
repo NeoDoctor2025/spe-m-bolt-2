@@ -209,7 +209,7 @@ export default function Dashboard() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold font-serif text-editorial-navy">Dashboard</h1>
+          <h1 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">Dashboard</h1>
           <p className="text-sm text-editorial-muted mt-1">Visao geral das avaliacoes e pacientes</p>
         </div>
         <div className="flex items-center gap-2">
@@ -247,7 +247,7 @@ export default function Dashboard() {
               )}
             </div>
             <div className="mt-4">
-              <p className="text-2xl font-bold font-serif text-editorial-navy">{card.value}</p>
+              <p className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">{card.value}</p>
               <p className="text-sm text-editorial-muted mt-0.5">{card.label}</p>
             </div>
           </Card>
@@ -279,7 +279,7 @@ export default function Dashboard() {
             <div className="mt-4">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-editorial-cream">
+                  <tr className="border-b border-editorial-cream dark:border-editorial-navy-light/20">
                     <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">
                       Paciente
                     </th>
@@ -298,14 +298,14 @@ export default function Dashboard() {
                   {recentEvals.map((ev) => (
                     <tr
                       key={ev.id}
-                      className="border-b border-editorial-cream/50 hover:bg-editorial-paper/30 transition-colors cursor-pointer"
+                      className="border-b border-editorial-cream/50 dark:border-editorial-navy-light/20 hover:bg-editorial-paper/30 transition-colors cursor-pointer"
                       onClick={() => navigate(`/evaluations/${ev.id}`)}
                     >
                       <td className="px-6 py-3">
                         <div className="flex items-center gap-3">
                           <Avatar name={ev.patient?.full_name ?? 'P'} size="sm" />
                           <div>
-                            <p className="text-sm font-medium text-editorial-navy">
+                            <p className="text-sm font-medium text-editorial-navy dark:text-editorial-cream">
                               {ev.patient?.full_name ?? 'Paciente'}
                             </p>
                             <p className="text-xs text-editorial-muted">{ev.patient?.cpf}</p>
@@ -320,7 +320,7 @@ export default function Dashboard() {
                       </td>
                       <td className="px-6 py-3 text-right">
                         {ev.status === 'Concluído' ? (
-                          <span className="text-sm font-semibold text-editorial-navy">
+                          <span className="text-sm font-semibold text-editorial-navy dark:text-editorial-cream">
                             {ev.max_score > 0 ? Math.round((ev.total_score / ev.max_score) * 100) : 0}%
                           </span>
                         ) : (
@@ -382,7 +382,7 @@ export default function Dashboard() {
                   />
                   <span className="text-sm text-editorial-muted">{item.name}</span>
                 </div>
-                <span className="text-sm font-medium text-editorial-navy">{item.value}</span>
+                <span className="text-sm font-medium text-editorial-navy dark:text-editorial-cream">{item.value}</span>
               </div>
             ))}
           </div>

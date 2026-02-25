@@ -170,7 +170,7 @@ export default function Analytics() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-serif text-editorial-navy">Relatorios e Estatisticas</h1>
+          <h1 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">Relatorios e Estatisticas</h1>
           <p className="text-sm text-editorial-muted mt-1">Analise detalhada das avaliacoes</p>
         </div>
         <div className="flex items-center gap-3">
@@ -203,7 +203,7 @@ export default function Analytics() {
                 <card.icon className={`h-5 w-5 ${card.color}`} />
               </div>
               <div>
-                <p className="text-2xl font-bold font-serif text-editorial-navy">{card.value}</p>
+                <p className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">{card.value}</p>
                 <p className="text-sm text-editorial-muted">{card.label}</p>
               </div>
             </div>

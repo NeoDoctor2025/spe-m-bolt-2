@@ -57,13 +57,13 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-12 bg-editorial-paper">
+      <div className="flex-1 flex items-center justify-center p-6 lg:p-12 bg-editorial-paper dark:bg-editorial-navy-dark transition-colors duration-300">
         <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-8">
             <div className="w-10 h-10 rounded-lg bg-editorial-gold/10 border border-editorial-gold/20 flex items-center justify-center">
               <Activity className="h-5 w-5 text-editorial-gold" />
             </div>
-            <span className="text-xl font-bold font-serif text-editorial-navy">SPE-M</span>
+            <span className="text-xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">SPE-M</span>
           </div>
           {children}
         </div>

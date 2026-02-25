@@ -77,7 +77,7 @@ export default function Patients() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold font-serif text-editorial-navy">Pacientes</h1>
+          <h1 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">Pacientes</h1>
           <p className="text-sm text-editorial-muted mt-1">{totalCount} pacientes cadastrados</p>
         </div>
         <Button onClick={() => navigate('/patients/new')}>
@@ -87,7 +87,7 @@ export default function Patients() {
       </div>
 
       <Card padding={false}>
-        <div className="p-4 border-b border-editorial-cream">
+        <div className="p-4 border-b border-editorial-cream dark:border-editorial-navy-light/20">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1">
               <Input
@@ -127,7 +127,7 @@ export default function Patients() {
         </div>
 
         {loading ? (
-          <div className="divide-y divide-editorial-cream">
+          <div className="divide-y divide-editorial-cream dark:divide-editorial-navy-light/20">
             {[...Array(6)].map((_, i) => (
               <TableRowSkeleton key={i} />
             ))}
@@ -149,7 +149,7 @@ export default function Patients() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-editorial-cream">
+                  <tr className="border-b border-editorial-cream dark:border-editorial-navy-light/20">
                     <th className="text-left text-xs font-medium text-editorial-muted uppercase tracking-wider px-6 py-3">
                       Paciente
                     </th>
@@ -174,14 +174,14 @@ export default function Patients() {
                   {patients.map((patient) => (
                     <tr
                       key={patient.id}
-                      className="border-b border-editorial-cream/50 hover:bg-editorial-cream/40 transition-colors cursor-pointer"
+                      className="border-b border-editorial-cream/50 dark:border-editorial-navy-light/20 hover:bg-editorial-cream/40 dark:hover:bg-white/5 transition-colors cursor-pointer"
                       onClick={() => navigate(`/patients/${patient.id}`)}
                     >
                       <td className="px-6 py-3">
                         <div className="flex items-center gap-3">
                           <Avatar name={patient.full_name} size="sm" />
                           <div>
-                            <p className="text-sm font-medium text-editorial-navy">{patient.full_name}</p>
+                            <p className="text-sm font-medium text-editorial-navy dark:text-editorial-cream">{patient.full_name}</p>
                             <p className="text-xs text-editorial-muted md:hidden">{formatCPF(patient.cpf)}</p>
                           </div>
                         </div>
@@ -207,7 +207,7 @@ export default function Patients() {
                               e.stopPropagation();
                               setOpenAction(openAction === patient.id ? null : patient.id);
                             }}
-                            className="p-1.5 rounded-lg text-editorial-muted hover:text-editorial-navy/80 hover:bg-editorial-cream/40 transition-colors focus-ring"
+                            className="p-1.5 rounded-lg text-editorial-muted hover:text-editorial-navy/80 dark:hover:text-editorial-cream/80 hover:bg-editorial-cream/40 dark:hover:bg-white/5 transition-colors focus-ring"
                           >
                             <MoreHorizontal className="h-4 w-4" />
                           </button>
@@ -220,13 +220,13 @@ export default function Patients() {
                                   setOpenAction(null);
                                 }}
                               />
-                              <div className="absolute right-0 top-full mt-1 w-44 bg-editorial-light border border-editorial-cream rounded-lg shadow-xl z-40 py-1 animate-fade-in">
+                              <div className="absolute right-0 top-full mt-1 w-44 bg-editorial-light dark:bg-editorial-navy/60 border border-editorial-cream dark:border-editorial-navy-light/20 rounded-lg shadow-xl z-40 py-1 animate-fade-in">
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(`/patients/${patient.id}`);
                                   }}
-                                  className="flex items-center gap-2 px-3 py-2 text-sm text-editorial-muted hover:text-editorial-navy hover:bg-editorial-cream/40 w-full text-left transition-colors"
+                                  className="flex items-center gap-2 px-3 py-2 text-sm text-editorial-muted hover:text-editorial-navy dark:hover:text-editorial-cream hover:bg-editorial-cream/40 dark:hover:bg-white/5 w-full text-left transition-colors"
                                 >
                                   <Eye className="h-4 w-4" />
                                   Visualizar
@@ -236,7 +236,7 @@ export default function Patients() {
                                     e.stopPropagation();
                                     navigate(`/patients/${patient.id}/edit`);
                                   }}
-                                  className="flex items-center gap-2 px-3 py-2 text-sm text-editorial-muted hover:text-editorial-navy hover:bg-editorial-cream/40 w-full text-left transition-colors"
+                                  className="flex items-center gap-2 px-3 py-2 text-sm text-editorial-muted hover:text-editorial-navy dark:hover:text-editorial-cream hover:bg-editorial-cream/40 dark:hover:bg-white/5 w-full text-left transition-colors"
                                 >
                                   <Pencil className="h-4 w-4" />
                                   Editar
@@ -246,19 +246,19 @@ export default function Patients() {
                                     e.stopPropagation();
                                     navigate(`/evaluations/new?patient=${patient.id}`);
                                   }}
-                                  className="flex items-center gap-2 px-3 py-2 text-sm text-editorial-muted hover:text-editorial-navy hover:bg-editorial-cream/40 w-full text-left transition-colors"
+                                  className="flex items-center gap-2 px-3 py-2 text-sm text-editorial-muted hover:text-editorial-navy dark:hover:text-editorial-cream hover:bg-editorial-cream/40 dark:hover:bg-white/5 w-full text-left transition-colors"
                                 >
                                   <ClipboardList className="h-4 w-4" />
                                   Nova Avaliacao
                                 </button>
-                                <div className="border-t border-editorial-cream my-1" />
+                                <div className="border-t border-editorial-cream dark:border-editorial-navy-light/20 my-1" />
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setOpenAction(null);
                                     setDeleteTarget(patient);
                                   }}
-                                  className="flex items-center gap-2 px-3 py-2 text-sm text-editorial-rose hover:text-editorial-rose/80 hover:bg-editorial-cream/40 w-full text-left transition-colors"
+                                  className="flex items-center gap-2 px-3 py-2 text-sm text-editorial-rose hover:text-editorial-rose/80 hover:bg-editorial-cream/40 dark:hover:bg-white/5 w-full text-left transition-colors"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                   Excluir
@@ -275,7 +275,7 @@ export default function Patients() {
             </div>
 
             {totalPages > 1 && (
-              <div className="flex items-center justify-between px-6 py-4 border-t border-editorial-cream">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-editorial-cream dark:border-editorial-navy-light/20">
                 <p className="text-sm text-editorial-muted">
                   Mostrando {(page - 1) * pageSize + 1} a{' '}
                   {Math.min(page * pageSize, totalCount)} de {totalCount}
@@ -326,7 +326,7 @@ export default function Patients() {
           <div className="flex items-start gap-3 p-3 rounded-lg bg-editorial-rose-light border border-editorial-rose/20">
             <AlertTriangle className="h-5 w-5 text-editorial-rose shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm text-editorial-navy">
+              <p className="text-sm text-editorial-navy dark:text-editorial-cream">
                 Tem certeza que deseja excluir <span className="font-semibold">{deleteTarget?.full_name}</span>?
               </p>
               <p className="text-xs text-editorial-muted mt-1">
