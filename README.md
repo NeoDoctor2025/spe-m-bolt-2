@@ -1,32 +1,37 @@
-# SPE-M -- Sistema de Pre-avaliacao Cirurgica
+# SPE-M -- Sistema de Planejamento e Avaliacao Cirurgica
 
-Plataforma web medica para avaliacao pre-operatoria estruturada com score de precisao em tempo real. Permite a profissionais de saude conduzir avaliacoes em 5 etapas, gerenciar prontuarios, registrar fotos clinicas com anotacoes e acompanhar estatisticas clinicas.
+Plataforma web medica para avaliacao pre-operatoria estruturada com score de precisao em tempo real. Desenvolvida para profissionais de saude que necessitam conduzir avaliacoes clinicas sistematizadas em 5 etapas, gerenciar prontuarios de pacientes, registrar fotos clinicas com anotacoes e acompanhar metricas de desempenho.
 
-## Stack
+---
+
+## Stack Tecnologica
 
 | Camada | Tecnologia |
 |---|---|
-| Frontend | React 18 · TypeScript · Vite |
-| Estilo | Tailwind CSS · Dark theme exclusivo |
-| Componentes | Radix UI (Dialog, Tabs, Accordion, Select, Tooltip, Popover, Progress, Radio Group, Dropdown Menu) |
+| Framework | React 18 + TypeScript + Vite 5 |
+| Estilizacao | Tailwind CSS 3 (design system editorial com dark mode) |
+| Componentes UI | Radix UI (Dialog, Tabs, Accordion, Select, Tooltip, Popover, Progress, Radio Group, Dropdown Menu) |
 | Icones | Lucide React |
-| Estado | Zustand 5 (4 stores) |
+| Gerenciamento de Estado | Zustand 5 (5 stores: auth, patient, evaluation, theme, ui) |
 | Formularios | React Hook Form + Zod 4 |
 | Graficos | Recharts 3 |
-| Backend | Supabase (PostgreSQL, Auth, Storage) |
-| Datas | date-fns |
-| Roteamento | React Router 7 |
+| Backend | Supabase (PostgreSQL + Auth + Storage) |
+| Manipulacao de Datas | date-fns (pt-BR) |
+| Roteamento | React Router DOM 7 |
+
+---
 
 ## Inicio Rapido
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
 ```
 
-Requer as variaveis `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` configuradas no arquivo `.env`.
+Requer as variaveis de ambiente `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` configuradas no arquivo `.env`.
 
-## Funcionalidades
+---
+
+## Funcionalidades Principais
 
 ### Score SPE-M -- Avaliacao em 5 Etapas
 
@@ -34,11 +39,11 @@ Wizard guiado com 22 criterios clinicos distribuidos em 5 etapas. Pontuacao maxi
 
 | Etapa | Criterios | Pts Max | Descricao |
 |---|---|---|---|
-| 1. Anamnese | 5 criterios | 14 | Queixa principal, historico cirurgico, comorbidades, medicamentos, alergias |
-| 2. Exame Fisico | 5 criterios | 14 | Estado geral, IMC, qualidade da pele, simetria, cicatrizacao |
-| 3. Classificacao de Risco | 4 criterios | 13 | ASA, Mallampati, risco tromboembolico, risco cardiaco (Goldman) |
-| 4. Planejamento Cirurgico | 4 criterios | 12 | Complexidade, tempo estimado, tipo de anestesia, expectativas |
-| 5. Revisao Final | 4 criterios | 11 | Exames laboratoriais, consentimento, preparo pre-op, decisao final |
+| 1. Anamnese | 5 | 14 | Queixa principal, historico cirurgico, comorbidades, medicamentos, alergias |
+| 2. Exame Fisico | 5 | 14 | Estado geral, IMC, qualidade da pele, simetria, cicatrizacao |
+| 3. Classificacao de Risco | 4 | 13 | ASA, Mallampati, risco tromboembolico, risco cardiaco (Goldman) |
+| 4. Planejamento Cirurgico | 4 | 12 | Complexidade, tempo estimado, tipo de anestesia, expectativas |
+| 5. Revisao Final | 4 | 11 | Exames laboratoriais, consentimento, preparo pre-op, decisao final |
 
 **Classificacao de risco por score:**
 
@@ -49,47 +54,23 @@ Wizard guiado com 22 criterios clinicos distribuidos em 5 etapas. Pontuacao maxi
 | >= 40% | Risco Alto / Cautela | Laranja |
 | < 40% | Risco Muito Alto / Contraindicado | Vermelho |
 
-O sidebar lateral exibe em tempo real: score total com indicador circular SVG, nivel de risco e breakdown por etapa com barras de progresso.
-
-### Telas
-
-| Rota | Descricao |
-|---|---|
-| `/login` | Autenticacao com layout split-screen (branding + stats a esquerda, formulario a direita) |
-| `/register` | Cadastro com nome, email, CRM, senha com indicador de forca (4 niveis) |
-| `/forgot-password` | Recuperacao de senha com confirmacao visual |
-| `/dashboard` | 4 metricas (pacientes, avaliacoes, pendentes, score medio), tabela de recentes, grafico de distribuicao por classe |
-| `/patients` | Lista paginada (10/pg) com busca por nome/CPF, filtro por classificacao, ordenacao |
-| `/patients/new` | Cadastro com 4 secoes: dados pessoais, contato, endereco (27 estados BR), historico medico |
-| `/patients/:id` | Detalhe com tabs (Visao Geral + Historico de avaliacoes), acoes rapidas |
-| `/patients/:id/edit` | Edicao do prontuario existente |
-| `/evaluations` | Lista centralizada de todas as avaliacoes com status e scores |
-| `/evaluations/new` | Wizard 5 etapas com score em tempo real e canvas anatomico |
-| `/evaluations/:id` | Retomada de avaliacao em andamento |
-| `/photos` | 5 viewports de upload (Frontal, Lateral E/D, Obliqua E/D) com ferramentas de anotacao |
-| `/analytics` | 4 graficos: linha (avaliacoes/mes), pizza (distribuicao por classe), barras (scores por criterio), cards de metricas |
-| `/settings` | Tabs: Perfil (nome, CRM, especialidade, telefone) e Clinica (nome, endereco) |
-| `/help` | FAQ em accordion pesquisavel (6 secoes) + contato de suporte |
+O sidebar lateral exibe em tempo real: score total com indicador circular SVG, nivel de risco com cor contextual e breakdown por etapa com barras de progresso individuais.
 
 ### Fotos Clinicas com Anotacao
 
 - 5 viewports anatomicos: Frontal, Lateral Esquerda/Direita, Obliqua Esquerda/Direita
 - Upload com drag-and-drop ou clique por viewport
-- Canvas HTML5 com ferramentas de desenho:
-  - Caneta (4 cores) e borracha
-  - 3 larguras de linha
-  - Undo/Redo com historico completo
-  - Limpar tudo
-- Anotacoes salvas como JSON (tipo, cor, largura, pontos)
-- Armazenamento: Supabase Storage (bucket `patient-photos`)
+- Canvas HTML5 com ferramentas de desenho: caneta (4 cores), borracha, 3 larguras de linha
+- Undo/Redo com historico completo e limpar tudo
+- Anotacoes persistidas como JSON (tipo, cor, largura, pontos)
+- Armazenamento via Supabase Storage (bucket `patient-photos`)
 
 ### Canvas Anatomico
 
 Disponivel na etapa de Classificacao de Risco do wizard:
 - Desenho sobre diagrama corporal (cabeca, torso, membros)
 - Ferramentas: caneta, borracha, 5 cores, 3 larguras
-- Undo/Redo completo
-- Responsivo ao container
+- Undo/Redo completo e responsivo ao container
 
 ### Autenticacao
 
@@ -100,27 +81,35 @@ Disponivel na etapa de Classificacao de Risco do wizard:
 - Rotas protegidas com redirect automatico
 - Perfil criado automaticamente via trigger no banco
 
-### Dashboard
+---
 
-- 4 cards de metricas com icones e tendencias
-- Tabela de avaliacoes recentes com avatar, paciente, data, status, score
-- Grafico de pizza: distribuicao de pacientes por classificacao (I a IV)
-- Loading skeletons durante fetch
+## Telas
 
-### Relatorios (Analytics)
+| Rota | Descricao |
+|---|---|
+| `/login` | Autenticacao com layout split-screen (branding + stats a esquerda, formulario a direita) |
+| `/register` | Cadastro com nome, email, CRM, senha com indicador de forca |
+| `/forgot-password` | Recuperacao de senha com confirmacao visual |
+| `/dashboard` | 4 metricas (pacientes, avaliacoes, pendentes, score medio), tabela de recentes, grafico de distribuicao |
+| `/patients` | Lista paginada (10/pg) com busca por nome/CPF, filtro por classificacao, ordenacao |
+| `/patients/new` | Cadastro com 4 secoes: dados pessoais, contato, endereco (27 estados BR), historico medico |
+| `/patients/:id` | Detalhe com tabs (Visao Geral + Historico de avaliacoes), acoes rapidas |
+| `/patients/:id/edit` | Edicao do prontuario existente |
+| `/evaluations` | Lista centralizada de todas as avaliacoes com status e scores |
+| `/evaluations/new` | Wizard 5 etapas com score em tempo real e canvas anatomico |
+| `/evaluations/:id` | Retomada de avaliacao em andamento |
+| `/photos` | 5 viewports de upload com ferramentas de anotacao em canvas |
+| `/analytics` | 4 graficos: linha (avaliacoes/mes), pizza (distribuicao), barras (scores/criterio), cards de metricas |
+| `/settings` | Tabs: Perfil (nome, CRM, especialidade, telefone) e Clinica (nome, endereco) |
+| `/help` | FAQ em accordion pesquisavel (6 secoes) + contato de suporte |
 
-- 4 cards de estatisticas: total avaliacoes, score medio, concluidas, maior score
-- Filtro por intervalo de datas (debounce 300ms)
-- Grafico de linha: avaliacoes ao longo de 12 meses
-- Grafico de pizza: distribuicao por classificacao
-- Grafico de barras horizontal: scores medios por criterio
-- Tema escuro customizado nos graficos
+---
 
 ## Banco de Dados
 
 5 tabelas com Row Level Security ativo em todas:
 
-| Tabela | Descricao | RLS |
+| Tabela | Descricao | Politica RLS |
 |---|---|---|
 | `profiles` | Perfil do profissional (nome, CRM, especialidade, clinica) | Usuario le/edita apenas o proprio perfil |
 | `patients` | Prontuarios com dados pessoais, endereco, historico medico | CRUD restrito ao dono |
@@ -132,42 +121,49 @@ Disponivel na etapa de Classificacao de Risco do wizard:
 
 **Trigger:** `handle_new_user` cria automaticamente um registro em `profiles` ao registrar usuario, puxando `full_name` do metadata.
 
-**Indexes:** user_id, patient_id, status, classification, created_at DESC nas tabelas relevantes.
+**Indexes:** `user_id`, `patient_id`, `status`, `classification`, `created_at DESC` nas tabelas relevantes.
 
-## Estado (Zustand)
+---
+
+## Gerenciamento de Estado (Zustand)
 
 | Store | Responsabilidade |
 |---|---|
 | `authStore` | Sessao, perfil, login/registro/logout, reset de senha |
 | `patientStore` | CRUD de pacientes, paginacao, filtros (busca, classificacao, status, ordenacao) |
 | `evaluationStore` | CRUD de avaliacoes, respostas por criterio, navegacao do wizard, calculo de score |
-| `uiStore` | Sidebar, toasts (auto-dismiss 4s com animacao) |
+| `themeStore` | Alternancia light/dark, persistencia em localStorage, respeita `prefers-color-scheme` |
+| `uiStore` | Sidebar, toasts (auto-dismiss 4s com animacao de saida) |
+
+---
 
 ## Validacao (Zod)
 
-| Schema | Campos |
+| Schema | Campos Validados |
 |---|---|
 | `loginSchema` | Email, senha (min 6) |
-| `registerSchema` | Nome, email, CRM, senha forte, confirmacao |
+| `registerSchema` | Nome, email, CRM, senha forte (8+ chars, maiuscula, numero), confirmacao |
 | `forgotPasswordSchema` | Email |
-| `patientSchema` | Nome, CPF (11-14 chars), nascimento, genero, telefone, email, endereco, classificacao, historico medico |
-| `profileSchema` | Nome, CRM, especialidade (50+ opcoes), telefone, dados da clinica |
+| `patientSchema` | Nome, CPF (11-14 chars), nascimento, genero, telefone, email, endereco, classificacao (I-IV), historico medico |
+| `profileSchema` | Nome, CRM, especialidade, telefone, dados da clinica |
+
+---
 
 ## Estrutura do Projeto
 
 ```
 src/
 ├── components/
-│   ├── evaluation/       # Wizard de avaliacao
+│   ├── evaluation/
 │   │   ├── AnatomicalCanvas.tsx    # Canvas HTML5 com diagrama corporal
 │   │   ├── CriterionQuestion.tsx   # Radio group por criterio
 │   │   ├── EvalScoreSidebar.tsx    # Score em tempo real + breakdown
-│   │   └── EvalStepper.tsx         # Indicador de etapas
-│   ├── layout/           # Estrutura da aplicacao
+│   │   └── EvalStepper.tsx         # Indicador visual de etapas
+│   ├── layout/
 │   │   ├── AppLayout.tsx           # Layout principal com Navbar + Outlet
 │   │   ├── AuthLayout.tsx          # Layout split-screen para login/registro
-│   │   └── Navbar.tsx              # Navegacao responsiva + dropdown de perfil
-│   └── ui/               # Componentes reutilizaveis
+│   │   └── Navbar.tsx              # Navegacao responsiva + dropdown de perfil + theme toggle
+│   └── ui/
 │       ├── Avatar.tsx              # Imagem ou iniciais (sm/md/lg/xl)
 │       ├── Badge.tsx               # 5 variantes (success/warning/error/info/neutral)
 │       ├── Button.tsx              # 5 variantes + loading spinner
@@ -178,16 +174,16 @@ src/
 │       ├── Skeleton.tsx            # Card/Table/Page skeletons com pulse
 │       └── Toast.tsx               # Notificacoes com auto-dismiss
 ├── data/
-│   ├── evaluationCriteria.ts       # 22 criterios em 5 etapas (config completa)
-│   └── mockData.ts                 # Dados auxiliares
+│   ├── constants.ts                # Estados brasileiros, especialidades medicas
+│   └── evaluationCriteria.ts       # 22 criterios em 5 etapas (config completa)
 ├── lib/
 │   ├── supabase.ts                 # Cliente Supabase (singleton)
 │   ├── types.ts                    # Interfaces TypeScript (Profile, Patient, Evaluation, etc.)
 │   ├── utils.ts                    # Formatacao (data, CPF, telefone), cores por score/status
 │   └── validation.ts              # Schemas Zod (login, registro, paciente, perfil)
-├── pages/                          # Uma pagina por rota (13 paginas)
-├── stores/                         # Zustand stores (auth, patient, evaluation, ui)
-├── index.css                       # Design system (dark theme, scrollbar, focus ring)
+├── pages/                          # 13 paginas (uma por rota)
+├── stores/                         # 5 Zustand stores
+├── index.css                       # Design system editorial (dark mode, scrollbar, focus ring, glass)
 ├── main.tsx                        # Entry point
 └── App.tsx                         # Rotas protegidas/publicas
 
@@ -201,30 +197,77 @@ supabase/
     └── create_patient_photos_storage_bucket.sql
 ```
 
-## Design System
+---
 
-| Elemento | Valor |
+## Design System Editorial
+
+### Paleta de Cores
+
+| Token | Valor | Uso |
+|---|---|---|
+| `editorial-navy` | `#1A2B48` | Texto principal, superficies dark |
+| `editorial-navy-light` | `#2A3F62` | Bordas e destaques dark |
+| `editorial-navy-dark` | `#111D33` | Background dark mode |
+| `editorial-gold` | `#C5A059` | Cor de destaque primaria |
+| `editorial-gold-light` | `#D4B574` | Hover/accent gold |
+| `editorial-gold-dark` | `#A8873D` | Texto sobre fundo gold |
+| `editorial-paper` | `#F2F2F0` | Background principal light |
+| `editorial-cream` | `#E8E6E1` | Bordas e divisores |
+| `editorial-warm` | `#D4CFC5` | Texto sutil |
+| `editorial-muted` | `#8A8477` | Texto secundario |
+| `editorial-light` | `#FAF9F7` | Superficie de cards |
+| `editorial-sage` | `#6B7F6B` | Semantica: sucesso/aprovado |
+| `editorial-rose` | `#9B4D4D` | Semantica: erro/risco |
+| `editorial-slate` | `#3D5A80` | Semantica: informacao |
+
+### Tipografia
+
+| Fonte | Uso | Pesos |
+|---|---|---|
+| Inter | Corpo, UI, labels | 300, 400, 500, 600, 700 |
+| Playfair Display | Headings, branding | 400, 500, 600, 700 |
+
+### Dark Mode
+
+- Estrategia: classe CSS (`darkMode: 'class'`)
+- Persistencia: localStorage (`spe-theme`)
+- Fallback: respeita `prefers-color-scheme` na primeira visita
+- Flash prevention: script inline no `<head>` aplica a classe antes do React carregar
+- Toggle: botao Sun/Moon na Navbar com transicao animada
+
+### Utilitarios CSS
+
+| Classe | Descricao |
 |---|---|
-| Background | `slate-950` |
-| Cards | `bg-slate-900 border-slate-800 rounded-lg` |
-| Primary | Blue-600 (`#2563EB`) |
-| Texto heading | `text-slate-50` |
-| Texto body | `text-slate-400` |
-| Success | Emerald-400/500 |
-| Warning | Amber-400/500 |
-| Danger | Red-400/500 |
-| Font | Inter (300-800, Google Fonts) |
-| Animacoes | fade-in, slide-up, slide-down (0.3s), pulse-slow (3s) |
-| Idioma | pt-BR |
+| `.card` | Superficie de card com borda e sombra (light/dark) |
+| `.glass` | Efeito vidro com backdrop-blur |
+| `.glass-editorial` | Vidro com toque dourado na borda |
+| `.focus-ring` | Anel de foco acessivel (gold) |
+| `.editorial-grid` | Grid decorativo de fundo |
 
-Dark theme exclusivo. Scrollbar customizada. Focus ring azul com offset.
+### Animacoes
+
+| Nome | Duracao | Descricao |
+|---|---|---|
+| `fade-in` | 0.4s | Aparecimento gradual |
+| `slide-up` | 0.4s | Entrada de baixo para cima |
+| `slide-down` | 0.4s | Entrada de cima para baixo |
+| `pulse-slow` | 3s | Pulso lento ciclico |
+
+---
 
 ## Scripts
 
 ```bash
 npm run dev        # Servidor de desenvolvimento (Vite)
 npm run build      # Build de producao
-npm run preview    # Preview do build
+npm run preview    # Preview do build local
 npm run lint       # ESLint
 npm run typecheck  # Verificacao de tipos TypeScript
 ```
+
+---
+
+## Idioma
+
+Toda a interface esta em **Portugues Brasileiro (pt-BR)**, incluindo labels de formularios, mensagens de erro, nomes de etapas, tooltips e textos de ajuda. Formatacoes de data, CPF e telefone seguem o padrao brasileiro.
