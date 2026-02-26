@@ -4,6 +4,7 @@ import { useAuthStore } from './stores/authStore';
 import { AppLayout } from './components/layout/AppLayout';
 import { ToastContainer } from './components/ui/Toast';
 import { PageSkeleton } from './components/ui/Skeleton';
+import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -56,6 +57,7 @@ export default function App() {
   }, [initialize]);
 
   return (
+    <ErrorBoundary>
     <BrowserRouter>
       <Routes>
         <Route
@@ -108,5 +110,6 @@ export default function App() {
       </Routes>
       <ToastContainer />
     </BrowserRouter>
+    </ErrorBoundary>
   );
 }

@@ -80,7 +80,7 @@ export default function Evaluations() {
                     <Badge variant={getStatusBadgeVariant(ev.status)}>{ev.status}</Badge>
                   </td>
                   <td className="px-6 py-3 text-right">
-                    {ev.status === 'Concluido' ? (
+                    {ev.status === 'Concluído' ? (
                       <span className="text-sm font-semibold font-serif text-editorial-navy dark:text-editorial-cream">
                         {ev.max_score > 0 ? Math.round((ev.total_score / ev.max_score) * 100) : 0}%
                       </span>

@@ -28,7 +28,6 @@ export function Badge({ variant = 'neutral', children, className = '' }: BadgePr
 
 export function getStatusBadgeVariant(status: string): BadgeVariant {
   switch (status) {
-    case 'Concluido':
     case 'Concluído':
     case 'Ativo':
       return 'success';

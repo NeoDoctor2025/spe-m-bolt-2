@@ -63,7 +63,7 @@ export default function Analytics() {
     const evals = evalsData ?? [];
 
     const total = evals.length;
-    const completed = evals.filter((e) => e.status === 'Concluido');
+    const completed = evals.filter((e) => e.status === 'Concluído');
     const avgScore =
       completed.length > 0
         ? Math.round(
