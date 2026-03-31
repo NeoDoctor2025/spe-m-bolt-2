@@ -11,8 +11,11 @@ import {
   BarChart3,
   ArrowUpRight,
   ArrowDownRight,
+  CalendarDays,
+  AlertCircle,
+  Star,
 } from 'lucide-react';
-import { startOfMonth, subMonths } from 'date-fns';
+import { startOfMonth, subMonths, startOfWeek, endOfWeek, isPast, parseISO } from 'date-fns';
 import { Card, CardTitle } from '../components/ui/Card';
 import { Badge, getStatusBadgeVariant } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -40,6 +43,9 @@ interface DashboardMetrics {
   totalEvaluations: number;
   pendingCount: number;
   avgScore: number;
+  appointmentsThisWeek: number;
+  overdueAppointments: number;
+  npsAvg: number | null;
   trends: {
     patients: TrendData;
     evaluations: TrendData;
@@ -72,12 +78,16 @@ export default function Dashboard() {
       const thisMonthStart = startOfMonth(now).toISOString();
       const lastMonthStart = startOfMonth(subMonths(now, 1)).toISOString();
 
+      const weekStart = startOfWeek(now, { weekStartsOn: 1 }).toISOString();
+      const weekEnd = endOfWeek(now, { weekStartsOn: 1 }).toISOString();
+
       const [
         patientsRes, evalsRes, pendingRes, scoresRes,
         patientsThisMonth, patientsLastMonth,
         evalsThisMonth, evalsLastMonth,
         pendingThisMonth, pendingLastMonth,
         scoresLastMonth,
+        appointmentsWeekRes, appointmentsAllPendingRes, surveysRes,
       ] = await Promise.all([
         supabase.from('patients').select('id', { count: 'exact', head: true }),
         supabase.from('evaluations').select('id', { count: 'exact', head: true }),
@@ -90,6 +100,9 @@ export default function Dashboard() {
         supabase.from('evaluations').select('id', { count: 'exact', head: true }).eq('status', 'Pendente').gte('created_at', thisMonthStart),
         supabase.from('evaluations').select('id', { count: 'exact', head: true }).eq('status', 'Pendente').gte('created_at', lastMonthStart).lt('created_at', thisMonthStart),
         supabase.from('evaluations').select('total_score, max_score').eq('status', 'Concluído').gte('completed_at', lastMonthStart).lt('completed_at', thisMonthStart),
+        supabase.from('patient_appointments').select('id', { count: 'exact', head: true }).eq('status', 'Agendado').gte('scheduled_date', weekStart).lte('scheduled_date', weekEnd),
+        supabase.from('patient_appointments').select('scheduled_date, status').eq('status', 'Agendado'),
+        supabase.from('satisfaction_surveys').select('nps_score'),
       ]);
 
       const scores = scoresRes.data ?? [];
@@ -110,11 +123,24 @@ export default function Dashboard() {
         ? Math.round(scoresLastMonthData.reduce((s, e) => s + (e.max_score > 0 ? (e.total_score / e.max_score) * 100 : 0), 0) / scoresLastMonthData.length)
         : 0;
 
+      const allPendingAppts = appointmentsAllPendingRes.data ?? [];
+      const overdueAppointments = allPendingAppts.filter(
+        (a) => a.scheduled_date && isPast(parseISO(a.scheduled_date))
+      ).length;
+
+      const npsScores = (surveysRes.data ?? []).filter((s) => s.nps_score !== null).map((s) => s.nps_score as number);
+      const npsAvg = npsScores.length > 0
+        ? Math.round(npsScores.reduce((sum, v) => sum + v, 0) / npsScores.length)
+        : null;
+
       setMetrics({
         totalPatients: patientsRes.count ?? 0,
         totalEvaluations: evalsRes.count ?? 0,
         pendingCount: pendingRes.count ?? 0,
         avgScore,
+        appointmentsThisWeek: appointmentsWeekRes.count ?? 0,
+        overdueAppointments,
+        npsAvg,
         trends: {
           patients: calcTrend(patientsThisMonth.count ?? 0, patientsLastMonth.count ?? 0),
           evaluations: calcTrend(evalsThisMonth.count ?? 0, evalsLastMonth.count ?? 0),
@@ -178,6 +204,7 @@ export default function Dashboard() {
       trend: metrics?.trends.patients,
       color: 'text-editorial-navy',
       bg: 'bg-editorial-navy/10',
+      href: '/patients',
     },
     {
       label: 'Fichas',
@@ -186,22 +213,26 @@ export default function Dashboard() {
       trend: metrics?.trends.evaluations,
       color: 'text-editorial-sage',
       bg: 'bg-editorial-sage-light',
+      href: '/evaluations',
     },
     {
-      label: 'Pendentes',
-      value: metrics?.pendingCount ?? 0,
-      icon: Clock,
-      trend: metrics?.trends.pending,
+      label: 'Agendamentos esta semana',
+      value: metrics?.appointmentsThisWeek ?? 0,
+      icon: CalendarDays,
+      trend: undefined,
+      color: 'text-editorial-slate',
+      bg: 'bg-editorial-slate/10',
+      href: '/appointments',
+      badge: (metrics?.overdueAppointments ?? 0) > 0 ? `${metrics?.overdueAppointments} atrasados` : undefined,
+    },
+    {
+      label: 'NPS Medio',
+      value: metrics?.npsAvg !== null ? `${metrics?.npsAvg}/10` : '—',
+      icon: Star,
+      trend: undefined,
       color: 'text-editorial-gold',
       bg: 'bg-editorial-gold/10',
-    },
-    {
-      label: 'Score Medio',
-      value: `${metrics?.avgScore ?? 0}%`,
-      icon: TrendingUp,
-      trend: metrics?.trends.avgScore,
-      color: 'text-editorial-sage',
-      bg: 'bg-editorial-sage-light',
+      href: undefined,
     },
   ];
 
@@ -226,25 +257,37 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metricCards.map((card) => (
-          <Card key={card.label} className="group hover:border-editorial-warm transition-colors">
+          <Card
+            key={card.label}
+            className={`group hover:border-editorial-warm transition-colors ${card.href ? 'cursor-pointer' : ''}`}
+            onClick={card.href ? () => navigate(card.href!) : undefined}
+          >
             <div className="flex items-start justify-between">
               <div className={`${card.bg} rounded-lg p-2.5`}>
                 <card.icon className={`h-5 w-5 ${card.color}`} />
               </div>
-              {card.trend?.show && (
-                <div
-                  className={`flex items-center gap-0.5 text-xs font-medium ${
-                    card.trend.up ? 'text-editorial-sage' : 'text-editorial-rose'
-                  }`}
-                >
-                  {card.trend.up ? (
-                    <ArrowUpRight className="h-3 w-3" />
-                  ) : (
-                    <ArrowDownRight className="h-3 w-3" />
-                  )}
-                  {card.trend.value}
-                </div>
-              )}
+              <div className="flex flex-col items-end gap-1">
+                {card.trend?.show && (
+                  <div
+                    className={`flex items-center gap-0.5 text-xs font-medium ${
+                      card.trend.up ? 'text-editorial-sage' : 'text-editorial-rose'
+                    }`}
+                  >
+                    {card.trend.up ? (
+                      <ArrowUpRight className="h-3 w-3" />
+                    ) : (
+                      <ArrowDownRight className="h-3 w-3" />
+                    )}
+                    {card.trend.value}
+                  </div>
+                )}
+                {'badge' in card && card.badge && (
+                  <div className="flex items-center gap-1 text-xs font-medium text-editorial-rose bg-editorial-rose/10 px-2 py-0.5 rounded-full">
+                    <AlertCircle className="h-3 w-3" />
+                    {card.badge}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="mt-4">
               <p className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">{card.value}</p>

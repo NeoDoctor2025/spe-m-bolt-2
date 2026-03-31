@@ -10,6 +10,7 @@ import { patientSchema, type PatientFormData } from '../lib/validation';
 import { usePatientStore } from '../stores/patientStore';
 import { useUIStore } from '../stores/uiStore';
 import { BRAZILIAN_STATES } from '../data/constants';
+import { PROCEDURE_TYPES, HOW_FOUND_CLINIC_OPTIONS } from '../data/procedures';
 import { PageSkeleton } from '../components/ui/Skeleton';
 
 export default function PatientForm() {
@@ -25,14 +26,18 @@ export default function PatientForm() {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<PatientFormData>({
     resolver: zodResolver(patientSchema),
     defaultValues: {
       gender: 'Masculino',
       classification: 'I',
+      smoker: false,
     },
   });
+
+  const smoker = watch('smoker');
 
   useEffect(() => {
     if (id) {
@@ -55,6 +60,13 @@ export default function PatientForm() {
             allergies: patient.allergies ?? '',
             medications: patient.medications ?? '',
             notes: patient.notes ?? '',
+            weight_kg: patient.weight_kg?.toString() ?? '',
+            height_cm: patient.height_cm?.toString() ?? '',
+            smoker: patient.smoker ?? false,
+            smoking_cessation_date: patient.smoking_cessation_date ?? '',
+            how_found_clinic: patient.how_found_clinic ?? '',
+            procedure_interest: patient.procedure_interest ?? '',
+            family_history: patient.family_history ?? '',
           });
         } else {
           setNotFound(true);
@@ -77,6 +89,13 @@ export default function PatientForm() {
       allergies: data.allergies || null,
       medications: data.medications || null,
       notes: data.notes || null,
+      weight_kg: data.weight_kg ? parseFloat(data.weight_kg) : null,
+      height_cm: data.height_cm ? parseFloat(data.height_cm) : null,
+      smoker: data.smoker ?? false,
+      smoking_cessation_date: data.smoking_cessation_date || null,
+      how_found_clinic: data.how_found_clinic || null,
+      procedure_interest: data.procedure_interest || null,
+      family_history: data.family_history || null,
     };
 
     if (isEdit && id) {
@@ -107,8 +126,8 @@ export default function PatientForm() {
     return (
       <div className="text-center py-20 animate-fade-in">
         <AlertTriangle className="h-12 w-12 text-editorial-gold mx-auto mb-4" />
-        <h2 className="text-lg font-semibold font-serif text-editorial-navy mb-1">Paciente nao encontrado</h2>
-        <p className="text-sm text-editorial-muted mb-6">O paciente solicitado nao existe ou foi removido.</p>
+        <h2 className="text-lg font-semibold font-serif text-editorial-navy mb-1">Paciente não encontrado</h2>
+        <p className="text-sm text-editorial-muted mb-6">O paciente solicitado não existe ou foi removido.</p>
         <Button variant="secondary" onClick={() => navigate('/patients')}>
           Voltar para Pacientes
         </Button>
@@ -121,12 +140,12 @@ export default function PatientForm() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 rounded-lg text-editorial-muted hover:text-editorial-navy hover:bg-editorial-cream/40 transition-colors"
+          className="p-2 rounded-lg text-editorial-muted hover:text-editorial-navy hover:bg-editorial-cream/40 dark:hover:bg-white/5 transition-colors"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div>
-          <h1 className="text-2xl font-bold font-serif text-editorial-navy">
+          <h1 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">
             {isEdit ? 'Editar Paciente' : 'Novo Paciente'}
           </h1>
           <p className="text-sm text-editorial-muted mt-0.5">
@@ -138,7 +157,7 @@ export default function PatientForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardTitle className="font-serif">Dados Pessoais</CardTitle>
-          <CardDescription>Informacoes basicas do paciente</CardDescription>
+          <CardDescription>Informações básicas do paciente</CardDescription>
           <div className="grid grid-cols-12 gap-4 mt-4">
             <div className="col-span-12 sm:col-span-6">
               <Input label="Nome Completo" error={errors.full_name?.message} {...register('full_name')} />
@@ -151,7 +170,7 @@ export default function PatientForm() {
             </div>
             <div className="col-span-12 sm:col-span-3">
               <Select
-                label="Genero"
+                label="Gênero"
                 options={[
                   { label: 'Masculino', value: 'Masculino' },
                   { label: 'Feminino', value: 'Feminino' },
@@ -163,7 +182,7 @@ export default function PatientForm() {
             </div>
             <div className="col-span-12 sm:col-span-3">
               <Select
-                label="Classificacao"
+                label="Classificação"
                 options={[
                   { label: 'Classe I', value: 'I' },
                   { label: 'Classe II', value: 'II' },
@@ -172,6 +191,26 @@ export default function PatientForm() {
                 ]}
                 error={errors.classification?.message}
                 {...register('classification')}
+              />
+            </div>
+            <div className="col-span-12 sm:col-span-6">
+              <Select
+                label="Como conheceu a clínica"
+                options={[
+                  { label: 'Não informado', value: '' },
+                  ...HOW_FOUND_CLINIC_OPTIONS.map((o) => ({ label: o, value: o })),
+                ]}
+                {...register('how_found_clinic')}
+              />
+            </div>
+            <div className="col-span-12 sm:col-span-6">
+              <Select
+                label="Procedimento de interesse"
+                options={[
+                  { label: 'Não informado', value: '' },
+                  ...PROCEDURE_TYPES.map((p) => ({ label: p, value: p })),
+                ]}
+                {...register('procedure_interest')}
               />
             </div>
           </div>
@@ -191,11 +230,11 @@ export default function PatientForm() {
         </Card>
 
         <Card>
-          <CardTitle className="font-serif">Endereco</CardTitle>
-          <CardDescription>Endereco residencial do paciente</CardDescription>
+          <CardTitle className="font-serif">Endereço</CardTitle>
+          <CardDescription>Endereço residencial do paciente</CardDescription>
           <div className="grid grid-cols-12 gap-4 mt-4">
             <div className="col-span-12 sm:col-span-6">
-              <Input label="Rua" placeholder="Rua, numero, complemento" {...register('street')} />
+              <Input label="Rua" placeholder="Rua, número, complemento" {...register('street')} />
             </div>
             <div className="col-span-12 sm:col-span-3">
               <Input label="Cidade" {...register('city')} />
@@ -215,20 +254,51 @@ export default function PatientForm() {
         </Card>
 
         <Card>
-          <CardTitle className="font-serif">Historico Medico</CardTitle>
-          <CardDescription>Informacoes clinicas relevantes</CardDescription>
+          <CardTitle className="font-serif">Dados Clínicos</CardTitle>
+          <CardDescription>Informações relevantes para planejamento cirúrgico e avaliação de risco</CardDescription>
+          <div className="grid grid-cols-12 gap-4 mt-4">
+            <div className="col-span-6 sm:col-span-3">
+              <Input label="Peso (kg)" type="number" step="0.1" placeholder="68.5" {...register('weight_kg')} />
+            </div>
+            <div className="col-span-6 sm:col-span-3">
+              <Input label="Altura (cm)" type="number" step="0.1" placeholder="165" {...register('height_cm')} />
+            </div>
+            <div className="col-span-12 sm:col-span-6 flex items-end pb-1.5">
+              <label className="flex items-center gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  className="rounded border-editorial-cream w-4 h-4 accent-editorial-gold"
+                  {...register('smoker')}
+                />
+                <span className="text-sm text-editorial-navy dark:text-editorial-cream">Fumante / Histórico de tabagismo</span>
+              </label>
+            </div>
+            {smoker && (
+              <div className="col-span-12 sm:col-span-6">
+                <Input label="Data de Cessação do Tabagismo" type="date" {...register('smoking_cessation_date')} />
+              </div>
+            )}
+            <div className="col-span-12">
+              <Textarea label="Histórico Familiar Relevante" placeholder="Ex: histórico familiar de trombose, câncer de mama..." {...register('family_history')} />
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <CardTitle className="font-serif">Histórico Médico</CardTitle>
+          <CardDescription>Informações clínicas relevantes</CardDescription>
           <div className="grid grid-cols-12 gap-4 mt-4">
             <div className="col-span-12">
-              <Textarea label="Historico Medico" placeholder="Descreva o historico medico do paciente..." {...register('medical_history')} />
+              <Textarea label="Histórico Médico" placeholder="Descreva o histórico médico do paciente..." {...register('medical_history')} />
             </div>
             <div className="col-span-12 sm:col-span-6">
               <Textarea label="Alergias" placeholder="Liste as alergias conhecidas..." {...register('allergies')} />
             </div>
             <div className="col-span-12 sm:col-span-6">
-              <Textarea label="Medicamentos" placeholder="Medicamentos de uso continuo..." {...register('medications')} />
+              <Textarea label="Medicamentos" placeholder="Medicamentos de uso contínuo..." {...register('medications')} />
             </div>
             <div className="col-span-12">
-              <Textarea label="Observacoes" placeholder="Observacoes adicionais..." {...register('notes')} />
+              <Textarea label="Observações" placeholder="Observações adicionais..." {...register('notes')} />
             </div>
           </div>
         </Card>
@@ -239,7 +309,7 @@ export default function PatientForm() {
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-            {isEdit ? 'Salvar Alteracoes' : 'Cadastrar Paciente'}
+            {isEdit ? 'Salvar Alterações' : 'Cadastrar Paciente'}
           </Button>
         </div>
       </form>

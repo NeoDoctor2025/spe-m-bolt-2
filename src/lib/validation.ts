@@ -51,6 +51,13 @@ export const patientSchema = z.object({
   allergies: z.string().optional(),
   medications: z.string().optional(),
   notes: z.string().optional(),
+  weight_kg: z.string().optional(),
+  height_cm: z.string().optional(),
+  smoker: z.boolean().optional(),
+  smoking_cessation_date: z.string().optional(),
+  how_found_clinic: z.string().optional(),
+  procedure_interest: z.string().optional(),
+  family_history: z.string().optional(),
 });
 
 export type PatientFormData = z.infer<typeof patientSchema>;

@@ -18,6 +18,7 @@ import Photos from './pages/Photos';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
+import Appointments from './pages/Appointments';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { session, initialized } = useAuthStore();
@@ -93,6 +94,7 @@ export default function App() {
           }
         >
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/appointments" element={<Appointments />} />
           <Route path="/patients" element={<Patients />} />
           <Route path="/patients/new" element={<PatientForm />} />
           <Route path="/patients/:id" element={<PatientDetail />} />
