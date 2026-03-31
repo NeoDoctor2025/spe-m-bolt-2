@@ -34,7 +34,7 @@ export default function Register() {
     if (/[A-Z]/.test(password)) strength++;
     if (/[0-9]/.test(password)) strength++;
     if (/[^A-Za-z0-9]/.test(password)) strength++;
-    const labels = ['Fraca', 'Fraca', 'Media', 'Forte', 'Excelente'];
+    const labels = ['Fraca', 'Fraca', 'Média', 'Forte', 'Excelente'];
     const colors = ['bg-editorial-rose', 'bg-editorial-rose', 'bg-editorial-gold', 'bg-editorial-sage', 'bg-editorial-sage'];
     return { level: strength, label: labels[strength], color: colors[strength] };
   };
@@ -44,11 +44,11 @@ export default function Register() {
   const translateAuthError = (msg: string): string => {
     const lower = msg.toLowerCase();
     if (lower.includes('already registered') || lower.includes('already been registered'))
-      return 'Este e-mail ja possui uma conta cadastrada. Tente fazer login.';
+      return 'Este e-mail já possui uma conta cadastrada. Tente fazer login.';
     if (lower.includes('password') && (lower.includes('short') || lower.includes('weak') || lower.includes('least')))
       return 'A senha deve ter pelo menos 8 caracteres.';
     if (lower.includes('valid email') || lower.includes('invalid email'))
-      return 'Informe um endereco de e-mail valido.';
+      return 'Informe um endereço de e-mail válido.';
     if (lower.includes('rate limit') || lower.includes('too many'))
       return 'Muitas tentativas. Aguarde alguns minutos e tente novamente.';
     return msg;
@@ -75,7 +75,7 @@ export default function Register() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Input
             label="Nome Completo"
-            placeholder="Dr. Joao Silva"
+            placeholder="Dr. João Silva"
             icon={<User className="h-4 w-4" />}
             error={errors.full_name?.message}
             {...reg('full_name')}
@@ -102,7 +102,7 @@ export default function Register() {
             <Input
               label="Senha"
               type={showPassword ? 'text' : 'password'}
-              placeholder="Minimo 8 caracteres"
+              placeholder="Mínimo 8 caracteres"
               icon={<Lock className="h-4 w-4" />}
               error={errors.password?.message}
               {...reg('password')}
@@ -129,7 +129,7 @@ export default function Register() {
                 ))}
               </div>
               <p className="text-xs text-editorial-muted">
-                Forca: <span className="text-editorial-navy dark:text-editorial-cream">{passwordStrength.label}</span>
+                Força: <span className="text-editorial-navy dark:text-editorial-cream">{passwordStrength.label}</span>
               </p>
             </div>
           )}
@@ -150,7 +150,7 @@ export default function Register() {
         </form>
 
         <p className="text-center text-sm text-editorial-muted mt-6">
-          Ja tem uma conta?{' '}
+          Já tem uma conta?{' '}
           <Link to="/login" className="text-editorial-gold hover:text-editorial-gold-dark transition-colors font-medium">
             Entrar
           </Link>

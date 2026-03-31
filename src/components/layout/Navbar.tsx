@@ -23,9 +23,9 @@ import { Avatar } from '../ui/Avatar';
 const navLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/patients', label: 'Pacientes', icon: Users },
-  { to: '/evaluations', label: 'Avaliacoes', icon: ClipboardList },
+  { to: '/evaluations', label: 'Avaliações', icon: ClipboardList },
   { to: '/photos', label: 'Fotos', icon: Camera },
-  { to: '/analytics', label: 'Relatorios', icon: BarChart3 },
+  { to: '/analytics', label: 'Relatórios', icon: BarChart3 },
 ];
 
 export function Navbar() {
@@ -105,7 +105,7 @@ export function Navbar() {
             >
               <Avatar name={profile?.full_name ?? 'U'} size="sm" />
               <span className="text-sm text-editorial-navy dark:text-editorial-cream hidden md:inline max-w-[120px] truncate">
-                {profile?.full_name || 'Usuario'}
+                {profile?.full_name || 'Usuário'}
               </span>
               <ChevronDown className="h-4 w-4 text-editorial-muted hidden md:block" />
             </button>
@@ -116,7 +116,7 @@ export function Navbar() {
                 <div className="absolute right-0 top-full mt-1 w-52 bg-white dark:bg-editorial-navy border border-editorial-cream dark:border-editorial-navy-light/20 rounded-lg shadow-lg z-50 py-1 animate-slide-down">
                   <div className="px-3 py-2 border-b border-editorial-cream dark:border-editorial-navy-light/20 mb-1">
                     <p className="text-sm font-medium text-editorial-navy dark:text-editorial-cream truncate">
-                      {profile?.full_name || 'Usuario'}
+                      {profile?.full_name || 'Usuário'}
                     </p>
                     <p className="text-xs text-editorial-muted truncate">{profile?.email}</p>
                   </div>
@@ -126,7 +126,7 @@ export function Navbar() {
                     className="flex items-center gap-2 px-3 py-2 text-sm text-editorial-muted hover:text-editorial-navy dark:hover:text-editorial-cream hover:bg-editorial-cream/40 dark:hover:bg-white/5 transition-colors"
                   >
                     <Settings className="h-4 w-4" />
-                    Configuracoes
+                    Configurações
                   </Link>
                   <Link
                     to="/help"

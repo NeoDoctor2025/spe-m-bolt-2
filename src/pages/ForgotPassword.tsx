@@ -62,7 +62,7 @@ export default function ForgotPassword() {
           <>
             <h2 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream mb-1">Recuperar Senha</h2>
             <p className="text-sm text-editorial-muted mb-8">
-              Informe seu e-mail para receber o link de recuperacao
+              Informe seu e-mail para receber o link de recuperação
             </p>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -76,7 +76,7 @@ export default function ForgotPassword() {
               />
 
               <Button type="submit" loading={loading} className="w-full">
-                Enviar Link de Recuperacao
+                Enviar Link de Recuperação
               </Button>
             </form>
           </>

@@ -92,7 +92,7 @@ export default function Login() {
         </form>
 
         <p className="text-center text-sm text-editorial-muted mt-6">
-          Nao tem uma conta?{' '}
+          Não tem uma conta?{' '}
           <Link to="/register" className="text-editorial-gold hover:text-editorial-gold-dark transition-colors font-medium">
             Criar conta
           </Link>

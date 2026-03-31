@@ -39,14 +39,14 @@ export function AuthLayout({ children }: AuthLayoutProps) {
             Surgical Planning & Evaluation - Medical
           </p>
           <p className="text-sm text-white/40 mt-4 leading-relaxed">
-            Plataforma de avaliacao medica para planejamento cirurgico com scoring em tempo real e visualizacao anatomica.
+            Plataforma de avaliação médica para planejamento cirúrgico com scoring em tempo real e visualização anatômica.
           </p>
 
           <div className="mt-12 grid grid-cols-3 gap-6">
             {[
-              { value: '2.4k+', label: 'Avaliacoes' },
+              { value: '2.4k+', label: 'Avaliações' },
               { value: '99.8%', label: 'Uptime' },
-              { value: '350+', label: 'Cirurgioes' },
+              { value: '350+', label: 'Cirurgiões' },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-2xl font-bold font-serif text-editorial-gold">{stat.value}</div>

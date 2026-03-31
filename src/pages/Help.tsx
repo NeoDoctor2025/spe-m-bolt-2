@@ -11,17 +11,17 @@ const FAQ_SECTIONS = [
       {
         question: 'Como criar minha conta no SPE-M?',
         answer:
-          'Acesse a pagina de registro, preencha seu nome completo, e-mail, numero do CRM e crie uma senha segura. Apos o cadastro, voce sera redirecionado automaticamente para o dashboard.',
+          'Acesse a página de registro, preencha seu nome completo, e-mail, número do CRM e crie uma senha segura. Após o cadastro, você será redirecionado automaticamente para o dashboard.',
       },
       {
         question: 'Como acessar o sistema pela primeira vez?',
         answer:
-          'Apos criar sua conta, faca login com seu e-mail e senha. O sistema exibira o dashboard principal com uma visao geral de todos os seus pacientes e avaliacoes.',
+          'Após criar sua conta, faça login com seu e-mail e senha. O sistema exibirá o dashboard principal com uma visão geral de todos os seus pacientes e avaliações.',
       },
       {
-        question: 'Quais navegadores sao suportados?',
+        question: 'Quais navegadores são suportados?',
         answer:
-          'O SPE-M funciona em todos os navegadores modernos: Chrome, Firefox, Safari e Edge. Recomendamos manter seu navegador atualizado para a melhor experiencia.',
+          'O SPE-M funciona em todos os navegadores modernos: Chrome, Firefox, Safari e Edge. Recomendamos manter seu navegador atualizado para a melhor experiência.',
       },
     ],
   },
@@ -31,102 +31,102 @@ const FAQ_SECTIONS = [
       {
         question: 'Como cadastrar um novo paciente?',
         answer:
-          'Acesse a secao "Pacientes" no menu superior e clique em "Novo Paciente". Preencha os dados pessoais, contato, endereco e historico medico. O CPF e o nome completo sao obrigatorios.',
+          'Acesse a seção "Pacientes" no menu superior e clique em "Novo Paciente". Preencha os dados pessoais, contato, endereço e histórico médico. O CPF e o nome completo são obrigatórios.',
       },
       {
         question: 'Como editar os dados de um paciente?',
         answer:
-          'Na lista de pacientes, clique nos tres pontos ao lado do paciente e selecione "Editar". Voce tambem pode acessar a pagina de detalhes do paciente e clicar no botao "Editar".',
+          'Na lista de pacientes, clique nos três pontos ao lado do paciente e selecione "Editar". Você também pode acessar a página de detalhes do paciente e clicar no botão "Editar".',
       },
       {
-        question: 'Como funciona a classificacao dos pacientes?',
+        question: 'Como funciona a classificação dos pacientes?',
         answer:
-          'Os pacientes sao classificados em 4 niveis (I a IV) baseados no risco cirurgico. Classe I indica menor risco, enquanto Classe IV indica maior risco. Esta classificacao auxilia no planejamento cirurgico.',
+          'Os pacientes são classificados em 4 níveis (I a IV) baseados no risco cirúrgico. Classe I indica menor risco, enquanto Classe IV indica maior risco. Esta classificação auxilia no planejamento cirúrgico.',
       },
       {
         question: 'Posso filtrar e buscar pacientes?',
         answer:
-          'Sim. Na lista de pacientes, utilize a barra de busca para pesquisar por nome ou CPF. Voce tambem pode filtrar por classificacao e ordenar por nome ou data de cadastro.',
+          'Sim. Na lista de pacientes, utilize a barra de busca para pesquisar por nome ou CPF. Você também pode filtrar por classificação e ordenar por nome ou data de cadastro.',
       },
     ],
   },
   {
-    title: 'Avaliacoes',
+    title: 'Avaliações',
     items: [
       {
-        question: 'Como iniciar uma nova avaliacao?',
+        question: 'Como iniciar uma nova avaliação?',
         answer:
-          'Acesse a pagina de detalhes do paciente e clique em "Nova Avaliacao". O sistema criara uma ficha de avaliacao e abrira o wizard com as etapas de avaliacao.',
+          'Acesse a página de detalhes do paciente e clique em "Nova Avaliação". O sistema criará uma ficha de avaliação e abrirá o wizard com as etapas de avaliação.',
       },
       {
-        question: 'Quais sao as etapas da avaliacao?',
+        question: 'Quais são as etapas da avaliação?',
         answer:
-          'A avaliacao possui 5 etapas: Anamnese, Exame Fisico, Classificacao de Risco, Planejamento Cirurgico e Revisao Final. Cada etapa contem criterios especificos com pontuacoes.',
+          'A avaliação possui 5 etapas: Anamnese, Exame Físico, Classificação de Risco, Planejamento Cirúrgico e Revisão Final. Cada etapa contém critérios específicos com pontuações.',
       },
       {
         question: 'Como funciona o sistema de scoring?',
         answer:
-          'Cada criterio possui opcoes com pontuacoes diferentes. O score total e calculado em tempo real e exibido no painel lateral. Scores acima de 80% indicam risco baixo, entre 50-80% risco moderado, e abaixo de 50% risco elevado.',
+          'Cada critério possui opções com pontuações diferentes. O score total é calculado em tempo real e exibido no painel lateral. Scores acima de 80% indicam risco baixo, entre 50-80% risco moderado, e abaixo de 50% risco elevado.',
       },
       {
-        question: 'Posso salvar e continuar uma avaliacao depois?',
+        question: 'Posso salvar e continuar uma avaliação depois?',
         answer:
-          'Sim. Clique no botao "Salvar" a qualquer momento. A avaliacao ficara com status "Em Andamento" e voce pode continua-la quando desejar acessando a lista de avaliacoes.',
+          'Sim. Clique no botão "Salvar" a qualquer momento. A avaliação ficará com status "Em Andamento" e você pode continuá-la quando desejar acessando a lista de avaliações.',
       },
     ],
   },
   {
-    title: 'Fotos e Anotacoes',
+    title: 'Fotos e Anotações',
     items: [
       {
         question: 'Como adicionar fotos de um paciente?',
         answer:
-          'Acesse a secao "Fotos", selecione o paciente desejado e faca upload das fotos em cada viewport (Frontal, Lateral, Obliqua). Arraste a imagem ou clique na area de upload.',
+          'Acesse a seção "Fotos", selecione o paciente desejado e faça upload das fotos em cada viewport (Frontal, Lateral, Oblíqua). Arraste a imagem ou clique na área de upload.',
       },
       {
-        question: 'Como fazer anotacoes nas fotos?',
+        question: 'Como fazer anotações nas fotos?',
         answer:
-          'Clique em uma foto ja enviada para abrir o editor de anotacoes. Use as ferramentas de desenho (caneta, borracha, cores) para marcar areas de interesse. Clique em "Salvar" ao finalizar.',
+          'Clique em uma foto já enviada para abrir o editor de anotações. Use as ferramentas de desenho (caneta, borracha, cores) para marcar áreas de interesse. Clique em "Salvar" ao finalizar.',
       },
       {
-        question: 'Quais formatos de imagem sao aceitos?',
+        question: 'Quais formatos de imagem são aceitos?',
         answer:
-          'O sistema aceita imagens nos formatos JPG, PNG e WebP. Recomendamos imagens com boa resolucao para melhor visualizacao e anotacao.',
+          'O sistema aceita imagens nos formatos JPG, PNG e WebP. Recomendamos imagens com boa resolução para melhor visualização e anotação.',
       },
     ],
   },
   {
-    title: 'Relatorios',
+    title: 'Relatórios',
     items: [
       {
-        question: 'Que tipo de relatorios estao disponiveis?',
+        question: 'Que tipo de relatórios estão disponíveis?',
         answer:
-          'O sistema oferece graficos de avaliacoes ao longo do tempo, distribuicao de pacientes por classificacao e scores medios por criterio de avaliacao.',
+          'O sistema oferece gráficos de avaliações ao longo do tempo, distribuição de pacientes por classificação e scores médios por critério de avaliação.',
       },
       {
-        question: 'Posso filtrar relatorios por periodo?',
+        question: 'Posso filtrar relatórios por período?',
         answer:
-          'Sim. Na pagina de relatorios, utilize os campos de data para definir o periodo desejado. Todos os graficos serao atualizados automaticamente.',
+          'Sim. Na página de relatórios, utilize os campos de data para definir o período desejado. Todos os gráficos serão atualizados automaticamente.',
       },
     ],
   },
   {
-    title: 'Conta e Configuracoes',
+    title: 'Conta e Configurações',
     items: [
       {
         question: 'Como alterar meus dados pessoais?',
         answer:
-          'Acesse "Configuracoes" no menu do perfil (canto superior direito). Na aba "Perfil", voce pode atualizar seu nome, CRM, especialidade e telefone.',
+          'Acesse "Configurações" no menu do perfil (canto superior direito). Na aba "Perfil", você pode atualizar seu nome, CRM, especialidade e telefone.',
       },
       {
-        question: 'Como alterar dados da clinica?',
+        question: 'Como alterar dados da clínica?',
         answer:
-          'Nas Configuracoes, acesse a aba "Clinica" para atualizar o nome, endereco e informacoes do local de atendimento.',
+          'Nas Configurações, acesse a aba "Clínica" para atualizar o nome, endereço e informações do local de atendimento.',
       },
       {
         question: 'Como recuperar minha senha?',
         answer:
-          'Na tela de login, clique em "Esqueceu a senha?" e informe seu e-mail. Voce recebera um link para redefinir sua senha.',
+          'Na tela de login, clique em "Esqueceu a senha?" e informe seu e-mail. Você receberá um link para redefinir sua senha.',
       },
     ],
   },
@@ -148,7 +148,7 @@ export default function Help() {
     <div className="space-y-6 animate-fade-in max-w-3xl">
       <div>
         <h1 className="text-2xl font-bold font-serif text-editorial-navy dark:text-editorial-cream">Central de Ajuda</h1>
-        <p className="text-sm text-editorial-muted mt-1">Encontre respostas para suas duvidas</p>
+        <p className="text-sm text-editorial-muted mt-1">Encontre respostas para suas dúvidas</p>
       </div>
 
       <Input
