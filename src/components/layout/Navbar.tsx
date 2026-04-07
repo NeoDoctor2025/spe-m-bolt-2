@@ -16,7 +16,6 @@ import {
   Sun,
   Moon,
   CalendarDays,
-  FileText,
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
@@ -26,10 +25,9 @@ const navLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/patients', label: 'Pacientes', icon: Users },
   { to: '/appointments', label: 'Agendamentos', icon: CalendarDays },
-  { to: '/evaluations', label: 'Avaliacoes', icon: ClipboardList },
-  { to: '/quick-reference', label: 'Protocolo', icon: FileText },
+  { to: '/evaluations', label: 'Avaliações', icon: ClipboardList },
   { to: '/photos', label: 'Fotos', icon: Camera },
-  { to: '/analytics', label: 'Relatorios', icon: BarChart3 },
+  { to: '/analytics', label: 'Relatórios', icon: BarChart3 },
 ];
 
 export function Navbar() {
