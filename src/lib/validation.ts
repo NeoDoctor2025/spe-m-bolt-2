@@ -32,6 +32,15 @@ export const forgotPasswordSchema = z.object({
 
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
+export const bioestimuladorSchema = z.object({
+  type: z.string().min(1, 'Tipo obrigatorio'),
+  region: z.string().min(1, 'Regiao obrigatoria'),
+  application_date: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+export type BioestimuladorData = z.infer<typeof bioestimuladorSchema>;
+
 export const patientSchema = z.object({
   full_name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
   cpf: z
@@ -58,6 +67,7 @@ export const patientSchema = z.object({
   how_found_clinic: z.string().optional(),
   procedure_interest: z.string().optional(),
   family_history: z.string().optional(),
+  bioestimuladores: z.array(bioestimuladorSchema).optional(),
 });
 
 export type PatientFormData = z.infer<typeof patientSchema>;

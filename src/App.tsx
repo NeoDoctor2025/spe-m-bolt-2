@@ -19,6 +19,7 @@ import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
 import Appointments from './pages/Appointments';
+import QuickReference from './pages/QuickReference';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { session, initialized } = useAuthStore();
@@ -104,6 +105,7 @@ export default function App() {
           <Route path="/evaluations/:id" element={<EvaluationWizard />} />
           <Route path="/photos" element={<Photos />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/quick-reference" element={<QuickReference />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
         </Route>

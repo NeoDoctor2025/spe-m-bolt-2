@@ -6,12 +6,13 @@ import { ArrowLeft, Save, Loader2, AlertTriangle } from 'lucide-react';
 import { Card, CardTitle, CardDescription } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input, Textarea, Select } from '../components/ui/Input';
-import { patientSchema, type PatientFormData } from '../lib/validation';
+import { patientSchema, type PatientFormData, type BioestimuladorData } from '../lib/validation';
 import { usePatientStore } from '../stores/patientStore';
 import { useUIStore } from '../stores/uiStore';
 import { BRAZILIAN_STATES } from '../data/constants';
 import { PROCEDURE_TYPES, HOW_FOUND_CLINIC_OPTIONS } from '../data/procedures';
 import { PageSkeleton } from '../components/ui/Skeleton';
+import { BioestimuladoresSection } from '../components/patient/BioestimuladoresSection';
 
 export default function PatientForm() {
   const { id } = useParams();
@@ -21,6 +22,8 @@ export default function PatientForm() {
   const [pageLoading, setPageLoading] = useState(!!id);
   const [notFound, setNotFound] = useState(false);
   const isEdit = !!id;
+
+  const [bioestimuladores, setBioestimuladores] = useState<BioestimuladorData[]>([]);
 
   const {
     register,
@@ -34,6 +37,7 @@ export default function PatientForm() {
       gender: 'Masculino',
       classification: 'I',
       smoker: false,
+      bioestimuladores: [],
     },
   });
 
@@ -44,6 +48,10 @@ export default function PatientForm() {
       setPageLoading(true);
       fetchPatientById(id).then((patient) => {
         if (patient) {
+          const patientBioestimuladores = Array.isArray(patient.bioestimuladores)
+            ? patient.bioestimuladores
+            : [];
+          setBioestimuladores(patientBioestimuladores);
           reset({
             full_name: patient.full_name,
             cpf: patient.cpf,
@@ -67,6 +75,7 @@ export default function PatientForm() {
             how_found_clinic: patient.how_found_clinic ?? '',
             procedure_interest: patient.procedure_interest ?? '',
             family_history: patient.family_history ?? '',
+            bioestimuladores: patientBioestimuladores,
           });
         } else {
           setNotFound(true);
@@ -96,6 +105,7 @@ export default function PatientForm() {
       how_found_clinic: data.how_found_clinic || null,
       procedure_interest: data.procedure_interest || null,
       family_history: data.family_history || null,
+      bioestimuladores: bioestimuladores,
     };
 
     if (isEdit && id) {
@@ -254,8 +264,8 @@ export default function PatientForm() {
         </Card>
 
         <Card>
-          <CardTitle className="font-serif">Dados Clínicos</CardTitle>
-          <CardDescription>Informações relevantes para planejamento cirúrgico e avaliação de risco</CardDescription>
+          <CardTitle className="font-serif">Dados Clinicos</CardTitle>
+          <CardDescription>Informacoes relevantes para planejamento cirurgico e avaliacao de risco</CardDescription>
           <div className="grid grid-cols-12 gap-4 mt-4">
             <div className="col-span-6 sm:col-span-3">
               <Input label="Peso (kg)" type="number" step="0.1" placeholder="68.5" {...register('weight_kg')} />
@@ -270,16 +280,19 @@ export default function PatientForm() {
                   className="rounded border-editorial-cream w-4 h-4 accent-editorial-gold"
                   {...register('smoker')}
                 />
-                <span className="text-sm text-editorial-navy dark:text-editorial-cream">Fumante / Histórico de tabagismo</span>
+                <span className="text-sm text-editorial-navy dark:text-editorial-cream">Fumante / Historico de tabagismo</span>
               </label>
             </div>
             {smoker && (
               <div className="col-span-12 sm:col-span-6">
-                <Input label="Data de Cessação do Tabagismo" type="date" {...register('smoking_cessation_date')} />
+                <Input label="Data de Cessacao do Tabagismo" type="date" {...register('smoking_cessation_date')} />
               </div>
             )}
             <div className="col-span-12">
-              <Textarea label="Histórico Familiar Relevante" placeholder="Ex: histórico familiar de trombose, câncer de mama..." {...register('family_history')} />
+              <Textarea label="Historico Familiar Relevante" placeholder="Ex: historico familiar de trombose, cancer de mama..." {...register('family_history')} />
+            </div>
+            <div className="col-span-12 border-t border-editorial-cream dark:border-editorial-navy-light/20 pt-4">
+              <BioestimuladoresSection value={bioestimuladores} onChange={setBioestimuladores} />
             </div>
           </div>
         </Card>

@@ -12,6 +12,13 @@ export interface Profile {
   updated_at: string;
 }
 
+export interface Bioestimulador {
+  type: string;
+  region: string;
+  application_date?: string;
+  notes?: string;
+}
+
 export interface Patient {
   id: string;
   user_id: string;
@@ -38,6 +45,9 @@ export interface Patient {
   how_found_clinic: string | null;
   procedure_interest: string | null;
   family_history: string | null;
+  bioestimuladores: Bioestimulador[];
+  workflow_phase: string | null;
+  lead_id: string | null;
   created_at: string;
   updated_at: string;
 }

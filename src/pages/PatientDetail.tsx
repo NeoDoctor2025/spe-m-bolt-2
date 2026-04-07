@@ -22,6 +22,8 @@ import {
   Cigarette,
   Users,
   Target,
+  Syringe,
+  GitBranch,
 } from 'lucide-react';
 import { Card, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -34,11 +36,13 @@ import { PreopExamsTab } from '../components/patient/PreopExamsTab';
 import { SurgicalTab } from '../components/patient/SurgicalTab';
 import { AppointmentsTab } from '../components/patient/AppointmentsTab';
 import { SurveysTab } from '../components/patient/SurveysTab';
+import { PatientTimeline } from '../components/workflow/PatientTimeline';
 import { usePatientStore } from '../stores/patientStore';
 import { useEvaluationStore } from '../stores/evaluationStore';
 import { useUIStore } from '../stores/uiStore';
 import { formatCPF, formatPhone, formatDate } from '../lib/utils';
 import type { Patient, Evaluation } from '../lib/types';
+import type { BioestimuladorData } from '../lib/validation';
 
 function calcBMI(weight: number | null, height: number | null): string {
   if (!weight || !height) return '---';
@@ -97,9 +101,14 @@ export default function PatientDetail() {
   const patientEvals = evaluations.filter((e) => e.patient_id === id);
   const bmi = calcBMI(patient.weight_kg, patient.height_cm);
 
+  const bioestimuladores: BioestimuladorData[] = Array.isArray(patient.bioestimuladores)
+    ? patient.bioestimuladores
+    : [];
+
   const tabs = [
-    { value: 'overview', label: 'Visão Geral', icon: FileText },
-    { value: 'history', label: 'Avaliações', icon: ClipboardList },
+    { value: 'overview', label: 'Visao Geral', icon: FileText },
+    { value: 'workflow', label: 'Fluxo', icon: GitBranch },
+    { value: 'history', label: 'Avaliacoes', icon: ClipboardList },
     { value: 'appointments', label: 'Agendamentos', icon: CalendarDays },
     { value: 'documents', label: 'Documentos', icon: FileText },
     { value: 'checklists', label: 'Checklists', icon: CheckSquare },
@@ -175,7 +184,7 @@ export default function PatientDetail() {
             </Card>
 
             <Card>
-              <CardTitle className="text-base font-serif">Dados Clínicos</CardTitle>
+              <CardTitle className="text-base font-serif">Dados Clinicos</CardTitle>
               <div className="mt-4 space-y-3">
                 {(patient.weight_kg || patient.height_cm) && (
                   <>
@@ -194,9 +203,33 @@ export default function PatientDetail() {
                 <InfoRow
                   icon={<Cigarette className="h-4 w-4" />}
                   label="Tabagismo"
-                  value={patient.smoker ? (patient.smoking_cessation_date ? `Cessou em ${formatDate(patient.smoking_cessation_date)}` : 'Sim — ativo') : 'Não'}
+                  value={patient.smoker ? (patient.smoking_cessation_date ? `Cessou em ${formatDate(patient.smoking_cessation_date)}` : 'Sim — ativo') : 'Nao'}
                   highlight={patient.smoker && !patient.smoking_cessation_date}
                 />
+                {bioestimuladores.length > 0 && (
+                  <div className="pt-3 border-t border-editorial-cream dark:border-editorial-navy-light/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Syringe className="h-4 w-4 text-editorial-gold" />
+                      <span className="text-sm font-medium text-editorial-navy dark:text-editorial-cream">Bioestimuladores</span>
+                      <span className="text-xs bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 px-1.5 py-0.5 rounded">
+                        {bioestimuladores.length}
+                      </span>
+                    </div>
+                    <div className="space-y-1.5 pl-6">
+                      {bioestimuladores.map((bio, idx) => (
+                        <div key={idx} className="text-sm">
+                          <span className="font-medium text-editorial-navy dark:text-editorial-cream">{bio.type}</span>
+                          <span className="text-editorial-muted"> — {bio.region}</span>
+                          {bio.application_date && (
+                            <span className="text-editorial-muted text-xs ml-2">
+                              ({new Date(bio.application_date).toLocaleDateString('pt-BR')})
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </Card>
 
@@ -225,6 +258,50 @@ export default function PatientDetail() {
                 <p className="mt-3 text-sm text-editorial-navy/80 dark:text-editorial-cream/80">{patient.notes}</p>
               </Card>
             )}
+          </div>
+        </Tabs.Content>
+
+        <Tabs.Content value="workflow">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2">
+              <CardTitle className="text-base font-serif mb-4">Fluxo do Paciente</CardTitle>
+              <PatientTimeline
+                currentPhase={patient.workflow_phase || 'captacao'}
+                onPhaseClick={(phaseId) => {
+                  console.log('Phase clicked:', phaseId);
+                }}
+              />
+            </Card>
+            <div className="space-y-4">
+              <Card>
+                <CardTitle className="text-base font-serif">Fase Atual</CardTitle>
+                <div className="mt-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-editorial-gold flex items-center justify-center text-white font-semibold">
+                      {(patient.workflow_phase || 'captacao').slice(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-editorial-navy dark:text-editorial-cream capitalize">
+                        {(patient.workflow_phase || 'captacao').replace(/_/g, ' ')}
+                      </p>
+                      <p className="text-xs text-editorial-muted">Fase atual do tratamento</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+              {bioestimuladores.length > 0 && (
+                <Card className="border-amber-200 dark:border-amber-500/30 bg-amber-50/50 dark:bg-amber-500/5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                    <CardTitle className="text-base font-serif text-amber-700 dark:text-amber-400">Atencao</CardTitle>
+                  </div>
+                  <p className="text-sm text-amber-700 dark:text-amber-400">
+                    Paciente possui {bioestimuladores.length} bioestimulador(es) registrado(s).
+                    Medico deve avaliar impacto no plano cirurgico (Criterio 3 SPE-M).
+                  </p>
+                </Card>
+              )}
+            </div>
           </div>
         </Tabs.Content>
 
