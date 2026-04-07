@@ -332,4 +332,29 @@ ROLLBACK;
 
 Não copiar para o repo até existir app TypeScript; manter os **12 valores** alinhados entre esta migration e a futura `src/lib/patient-pipeline.ts`.
 
+---
+
+## Run order — Issue 1 (copy/paste + checkpoints)
+
+Antes de **qualquer** edição ou commit:
+
+```bash
+cd /Users/humbertolopes/Dev/projetos/workspace/spe-m-bolt-2
+git rev-parse --show-toplevel   # deve terminar em .../workspace/spe-m-bolt-2
+pwd
+```
+
+| # | Checkpoint | Comando / ação |
+|---|------------|----------------|
+| 1 | Docs no remoto | `git fetch origin` → branch `docs/issue-1-checklist-validation` pushed; abrir PR se a política do time exigir |
+| 2 | Base alinhada | Fazer merge do PR de docs em `main` **ou** trabalhar a partir de `main` atualizado: `git checkout main && git pull` |
+| 3 | Branch de schema | `git checkout -b feat/issue-1-schema` |
+| 4 | Decisão greenfield vs legado | Na migration `20260407180000_issue1_blocks_a_d_skeleton.sql`, descomentar **só** a variante escolhida (e garantir migration de **schema base** anterior se `profiles` / tabelas clínicas ainda não existirem) |
+| 5 | Aplicar SQL local | `supabase db reset` **ou** `supabase migration up` (conforme fluxo do projeto) |
+| 6 | Validar A–D | Rodar testes SQL **1–12** + script **BEGIN … ROLLBACK** (greenfield **ou** legado) deste documento |
+| 7 | Commit incremental | Ex.: helpers+orgs+profiles → colunas `org_id` → RLS → (depois) E/F/G/H em commits separados |
+| 8 | Avançar E–H | Hook JWT → Storage → `complete-onboarding` → `gen types` + TS (após A–D estável) |
+
+**Parar e rever** se o passo 6 falhar (CHECK, RLS ou trigger) antes de subir E/F/G.
+
 
