@@ -334,6 +334,35 @@ Não copiar para o repo até existir app TypeScript; manter os **12 valores** al
 
 ---
 
+## Pré-voo migration A–D — 3 checks finais
+
+Antes de `db reset` / `migration up`, validar no SQL e no arquivo `20260407180000_issue1_blocks_a_d_skeleton.sql`:
+
+1. **`search_path` em funções sensíveis** — Toda função **`SECURITY DEFINER`** e helpers usados em RLS devem ter **`SET search_path = public`** (ou `search_path` controlado explícito) para evitar hijack. No arquivo: `update_updated_at`, `current_org_id`, `current_app_role` (invoker + `search_path`), `profiles_protect_tenant_columns` (definer + `search_path`).
+
+2. **Idempotência mínima** — Preferir `CREATE OR REPLACE FUNCTION`, `CREATE TABLE IF NOT EXISTS`, `ADD COLUMN IF NOT EXISTS`, **`DROP POLICY IF EXISTS`** antes de `CREATE POLICY`, `DROP TRIGGER IF EXISTS` antes de `CREATE TRIGGER`, para reruns locais não falharem à toa.
+
+3. **Nomes estáveis** — Constraints, policies e triggers com nomes **fixos** (evitar depender de nomes auto-gerados). Referência rápida nesta Issue 1:
+
+| Tipo | Nome |
+|------|------|
+| CHECK | `profiles_role_check`, `patients_workflow_status_check` |
+| Trigger | `trg_organizations_updated_at`, `trg_profiles_protect_tenant_columns` |
+| Policy orgs | `org_select`, `org_update` |
+| Policy profiles | `profiles_select_own`, `profiles_select_same_org_admin`, `profiles_insert_own`, `profiles_update_own` |
+| Policy DELETE | `leads_delete`, `photos_delete` (após descomentar Bloco D) |
+
+**Path do repo** (crítico):
+
+```bash
+cd /Users/humbertolopes/Dev/projetos/workspace/spe-m-bolt-2
+git rev-parse --show-toplevel
+```
+
+Deve imprimir exatamente: `/Users/humbertolopes/Dev/projetos/workspace/spe-m-bolt-2`
+
+---
+
 ## Run order — Issue 1 (copy/paste + checkpoints)
 
 Antes de **qualquer** edição ou commit:

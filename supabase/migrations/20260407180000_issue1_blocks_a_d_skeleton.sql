@@ -18,6 +18,11 @@
 -- Escolher UMA variante por tabela:
 --   [GREENFIELD] = sem linhas → org_id NOT NULL + workflow_status NOT NULL DEFAULT 'lead'
 --   [LEGADO]     = nullable + backfill + NOT NULL em migration posterior
+--
+-- Pré-voo (3 checks):
+--   1) search_path — funções SECURITY DEFINER (e helpers expostos) com SET search_path = public
+--   2) Idempotência — CREATE OR REPLACE / IF NOT EXISTS / DROP POLICY IF EXISTS antes de recriar
+--   3) Nomes estáveis — constraints, policies e triggers com nomes explícitos (sem depender de PG auto)
 -- ============================================================================
 
 -- ----------------------------------------------------------------------------
@@ -27,6 +32,8 @@
 CREATE OR REPLACE FUNCTION public.update_updated_at()
 RETURNS trigger
 LANGUAGE plpgsql
+SECURITY INVOKER
+SET search_path = public
 AS $$
 BEGIN
   NEW.updated_at = now();
@@ -42,6 +49,8 @@ CREATE OR REPLACE FUNCTION public.current_org_id()
 RETURNS uuid
 LANGUAGE sql
 STABLE
+SECURITY INVOKER
+SET search_path = public
 AS $$
   SELECT (auth.jwt() -> 'app_metadata' ->> 'org_id')::uuid;
 $$;
@@ -50,6 +59,8 @@ CREATE OR REPLACE FUNCTION public.current_app_role()
 RETURNS text
 LANGUAGE sql
 STABLE
+SECURITY INVOKER
+SET search_path = public
 AS $$
   SELECT (auth.jwt() -> 'app_metadata' ->> 'role');
 $$;
