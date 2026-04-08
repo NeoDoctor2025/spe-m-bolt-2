@@ -352,6 +352,8 @@ Antes de `db reset` / `migration up`, validar no SQL e no arquivo `2026040718000
 | Policy profiles | `profiles_select_own`, `profiles_select_same_org_admin`, `profiles_insert_own`, `profiles_update_own` |
 | Policy DELETE | `leads_delete`, `photos_delete` (após descomentar Bloco D) |
 
+`profiles_insert_own`: **`TO authenticated`** com `WITH CHECK (auth.uid() = id AND org_id IS NULL AND role IS NULL)` — evita bootstrap de tenant via client.
+
 **Path do repo** (crítico):
 
 ```bash

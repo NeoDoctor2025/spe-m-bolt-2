@@ -93,6 +93,9 @@ CREATE TRIGGER trg_organizations_updated_at
 
 ALTER TABLE public.organizations ENABLE ROW LEVEL SECURITY;
 
+-- INSERT em organizations: sem policy para authenticated — apenas service_role,
+-- migration ou sessão privilegiada (ex.: complete-onboarding via admin client).
+
 -- Policies novas (ajustar nomes se já existirem no projeto)
 DROP POLICY IF EXISTS org_select ON public.organizations;
 CREATE POLICY org_select ON public.organizations
@@ -192,7 +195,12 @@ CREATE POLICY profiles_select_same_org_admin ON public.profiles
 DROP POLICY IF EXISTS profiles_insert_own ON public.profiles;
 CREATE POLICY profiles_insert_own ON public.profiles
   FOR INSERT
-  WITH CHECK (auth.uid() = id);
+  TO authenticated
+  WITH CHECK (
+    auth.uid() = id
+    AND org_id IS NULL
+    AND role IS NULL
+  );
 
 DROP POLICY IF EXISTS profiles_update_own ON public.profiles;
 CREATE POLICY profiles_update_own ON public.profiles
@@ -329,14 +337,15 @@ ALTER TABLE public.leads
 /*
 ALTER TABLE public.patients ENABLE ROW LEVEL SECURITY;
 
--- DROP POLICY IF EXISTS ... ON public.patients;
-
+DROP POLICY IF EXISTS patients_select_org ON public.patients;
 CREATE POLICY patients_select_org ON public.patients
   FOR SELECT USING (org_id = public.current_org_id());
 
+DROP POLICY IF EXISTS patients_insert_org ON public.patients;
 CREATE POLICY patients_insert_org ON public.patients
   FOR INSERT WITH CHECK (org_id = public.current_org_id());
 
+DROP POLICY IF EXISTS patients_update_org ON public.patients;
 CREATE POLICY patients_update_org ON public.patients
   FOR UPDATE USING (org_id = public.current_org_id())
   WITH CHECK (org_id = public.current_org_id());
