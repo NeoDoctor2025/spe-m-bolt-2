@@ -1,0 +1,13 @@
+{
+  "folders": [
+    {
+      "name": "spe-m-bolt-2 (principal)",
+      "path": "."
+    },
+    {
+      "name": "mfi-saas (referência)",
+      "path": "../mfi-saas"
+    }
+  ],
+  "settings": {}
+}
