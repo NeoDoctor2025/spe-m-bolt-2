@@ -12,7 +12,7 @@ Plataforma web medica para avaliacao pre-operatoria estruturada com score de pre
 | Estilizacao | Tailwind CSS 3 (design system editorial com dark mode) |
 | Componentes UI | Radix UI (Dialog, Tabs, Accordion, Select, Tooltip, Popover, Progress, Radio Group, Dropdown Menu) |
 | Icones | Lucide React |
-| Gerenciamento de Estado | Zustand 5 (5 stores: auth, patient, evaluation, theme, ui) |
+| Gerenciamento de Estado | Zustand 5 (11 stores: auth, patient, evaluation, checklist, document, surgical, appointment, preopExam, survey, theme, ui) |
 | Formularios | React Hook Form + Zod 4 |
 | Graficos | Recharts 3 |
 | Backend | Supabase (PostgreSQL + Auth + Storage) |
@@ -104,18 +104,19 @@ Disponivel na etapa de Classificacao de Risco do wizard:
 | `/settings` | Tabs: Perfil (nome, CRM, especialidade, telefone) e Clinica (nome, endereco) |
 | `/help` | FAQ em accordion pesquisavel (6 secoes) + contato de suporte |
 | `/reference` | Cartao de referencia rapida com protocolo completo (10 fases) e keywords criticas para WhatsApp |
+| `/appointments` | Gerenciamento de agendamentos pre/pos operatorios |
 
 ---
 
 ## Banco de Dados - Arquitetura Multi-tenancy
 
-12 tabelas com Row Level Security ativo em todas (organizacoes + dados):
+15 tabelas com Row Level Security ativo em todas (organizacoes + dados):
 
 | Tabela | Descricao | Politica RLS |
 |---|---|---|
 | `organizations` | Clinicas/unidades (nome, CNPJ, timezone) | Usuario le/edita apenas se org_id = current_org_id() |
 | `profiles` | Perfil do profissional com org_id + role | CRUD restrito ao seu org_id |
-| `patients` | Prontuarios com status de workflow (11 estados) | CRUD restrito ao seu org_id |
+| `patients` | Prontuarios com status de workflow (12 estados) | CRUD restrito ao seu org_id |
 | `evaluations` | Avaliacoes SPE-M com score | CRUD restrito ao seu org_id |
 | `evaluation_criteria` | Respostas individuais por criterio | CRUD restrito ao seu org_id |
 | `patient_photos` | Fotos com anotacoes JSONB | CRUD restrito ao seu org_id |
@@ -127,6 +128,7 @@ Disponivel na etapa de Classificacao de Risco do wizard:
 | `surgical_records` | Registro de cirurgias (tecnica, tempo, complicacoes) | CRUD restrito ao seu org_id |
 | `implant_records` | Implantes cirurgicos (volume, lote, lado) | CRUD restrito ao seu org_id |
 | `satisfaction_surveys` | NPS e feedback pos-operatorio | CRUD restrito ao seu org_id |
+| `leads` | Captacao de leads (origem, procedimento de interesse, conversao) | CRUD restrito ao seu org_id |
 
 **Workflow States:** `lead` → `consulta_agendada` → `consulta_realizada` → `decidiu_operar` → `pre_operatorio` → `cirurgia_agendada` → `cirurgia_realizada` → `pos_op_ativo` → `longo_prazo` → `encerrado` (com terminais: `cancelado`, `nao_convertido`)
 
@@ -139,6 +141,8 @@ Disponivel na etapa de Classificacao de Risco do wizard:
 **JWT Custom Hook:** `auth.custom_access_token_hook` injeta org_id e role em app_metadata
 
 **Indexes:** `org_id`, `user_id`, `patient_id`, `status`, `classification`, `created_at DESC` em tabelas relevantes.
+
+**Total:** 15 tabelas, todas com RLS ativo e policies restritivas por org_id.
 
 ---
 
@@ -186,12 +190,20 @@ src/
 │   │   ├── AppLayout.tsx           # Layout principal com Navbar + Outlet
 │   │   ├── AuthLayout.tsx          # Layout split-screen para login/registro
 │   │   └── Navbar.tsx              # Navegacao responsiva + dropdown de perfil + theme toggle
+│   ├── patient/
+│   │   ├── AppointmentsTab.tsx     # Tab de agendamentos pre/pos operatorios
+│   │   ├── ChecklistsTab.tsx       # Tab de checklists cirurgicos
+│   │   ├── DocumentsTab.tsx        # Tab de documentos (TCIs, contratos)
+│   │   ├── PreopExamsTab.tsx       # Tab de exames pre-operatorios
+│   │   ├── SurgicalTab.tsx         # Tab de registros cirurgicos + implantes
+│   │   └── SurveysTab.tsx          # Tab de pesquisas de satisfacao NPS
 │   └── ui/
 │       ├── Avatar.tsx              # Imagem ou iniciais (sm/md/lg/xl)
 │       ├── Badge.tsx               # 5 variantes (success/warning/error/info/neutral)
 │       ├── Button.tsx              # 5 variantes + loading spinner
 │       ├── Card.tsx                # Container com header/title/description
 │       ├── EmptyState.tsx          # Estado vazio com icone e CTA
+│       ├── ErrorBoundary.tsx       # Boundary de erro React com fallback UI
 │       ├── Input.tsx               # Input, Textarea, Select com validacao
 │       ├── Modal.tsx               # Dialog Radix com backdrop blur
 │       ├── Skeleton.tsx            # Card/Table/Page skeletons com pulse
@@ -200,18 +212,20 @@ src/
 │   ├── constants.ts                # Estados brasileiros, especialidades medicas
 │   └── evaluationCriteria.ts       # 22 criterios em 5 etapas (config completa)
 ├── lib/
+│   ├── keywordCheck.ts             # Deteccao de alertas clinicos (25+ keywords PT-BR)
+│   ├── patientPipeline.ts          # Maquina de estados de workflow (logica pura)
 │   ├── supabase.ts                 # Cliente Supabase (singleton)
 │   ├── types.ts                    # Interfaces TypeScript (Profile, Patient, Evaluation, etc.)
 │   ├── utils.ts                    # Formatacao (data, CPF, telefone), cores por score/status
 │   └── validation.ts              # Schemas Zod (login, registro, paciente, perfil)
-├── pages/                          # 13 paginas (uma por rota)
-├── stores/                         # 5 Zustand stores
+├── pages/                          # 16 paginas (uma por rota)
+├── stores/                         # 11 Zustand stores
 ├── index.css                       # Design system editorial (dark mode, scrollbar, focus ring, glass)
 ├── main.tsx                        # Entry point
 └── App.tsx                         # Rotas protegidas/publicas
 
 supabase/
-├── migrations/                     # 11 migracoes SQL
+├── migrations/                     # 11 migracoes SQL (multi-tenancy completa)
 │   ├── create_profiles_table.sql
 │   ├── create_patients_table.sql
 │   ├── create_evaluations_table.sql
