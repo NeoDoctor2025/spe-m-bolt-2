@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Users,
   ClipboardList,
-  Clock,
-  TrendingUp,
   Plus,
   ArrowRight,
   FileText,

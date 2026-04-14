@@ -4,23 +4,31 @@ import type { ReactNode } from 'react';
 
 interface ModalProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChange?: (open: boolean) => void;
+  onClose?: () => void;
   title: string;
   description?: string;
   children: ReactNode;
+  footer?: ReactNode;
   maxWidth?: string;
 }
 
 export function Modal({
   open,
   onOpenChange,
+  onClose,
   title,
   description,
   children,
+  footer,
   maxWidth = 'max-w-lg',
 }: ModalProps) {
+  const handleOpenChange = (val: boolean) => {
+    if (onOpenChange) onOpenChange(val);
+    if (!val && onClose) onClose();
+  };
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-editorial-navy/30 backdrop-blur-sm z-50 animate-fade-in" />
         <Dialog.Content
@@ -42,6 +50,7 @@ export function Modal({
             </Dialog.Close>
           </div>
           {children}
+          {footer && <div className="mt-4">{footer}</div>}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

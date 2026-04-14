@@ -3,7 +3,7 @@ import { CheckSquare, Plus, ChevronDown, ChevronUp, Trash2, Shield, Info, AlertT
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Modal } from '../ui/Modal';
-import { Select, Input } from '../ui/Input';
+import { Select } from '../ui/Input';
 import { EmptyState } from '../ui/EmptyState';
 import { useChecklistStore } from '../../stores/checklistStore';
 import { useUIStore } from '../../stores/uiStore';

@@ -7,7 +7,7 @@ import { Select, Input } from '../ui/Input';
 import { EmptyState } from '../ui/EmptyState';
 import { useDocumentStore } from '../../stores/documentStore';
 import { useUIStore } from '../../stores/uiStore';
-import { formatDate, formatDateTime } from '../../lib/utils';
+import { formatDate } from '../../lib/utils';
 import { PROCEDURE_TYPES } from '../../data/procedures';
 import type { PatientDocument, DocumentType, DocumentStatus } from '../../lib/types';
 

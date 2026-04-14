@@ -144,7 +144,7 @@ export const useChecklistStore = create<ChecklistState>((set, get) => ({
     return { error: null };
   },
 
-  deleteItem: async (itemId, checklistId, patientId) => {
+  deleteItem: async (itemId, _checklistId, patientId) => {
     const { error } = await supabase.from('checklist_items').delete().eq('id', itemId);
     if (error) return { error: error.message };
     await get().fetchChecklists(patientId);

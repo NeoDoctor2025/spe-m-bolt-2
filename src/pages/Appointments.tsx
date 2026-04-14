@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { format, isToday, isTomorrow, isPast, parseISO, isThisWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Card, CardTitle } from '../components/ui/Card';
+import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Modal } from '../components/ui/Modal';
