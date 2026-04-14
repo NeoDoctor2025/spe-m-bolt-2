@@ -7,6 +7,13 @@
 - `npm run lint` - Run ESLint
 - `npm run typecheck` - TypeScript type checking (tsconfig.app.json)
 
+## Latest Build Status
+
+✅ **Build Success** - All TypeScript errors resolved
+- Fixed Modal component to support `onClose` and `footer` props
+- Cleaned up unused imports across components
+- Production build complete without errors
+
 ## Tech Stack
 
 - **Framework**: React 18 + TypeScript + Vite
@@ -83,6 +90,7 @@ Dark mode uses Tailwind's `class` strategy (`darkMode: 'class'` in tailwind.conf
 - Cards use `.card` utility or `Card` component
 - Glass effects via `.glass` and `.glass-editorial` utilities
 - Focus states via `.focus-ring` utility class
+- Modal component (`src/components/ui/Modal.tsx`) supports both `onOpenChange` (legacy) and `onClose` callbacks, plus optional `footer` prop for action buttons
 
 ## Database (Supabase)
 
