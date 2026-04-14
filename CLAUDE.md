@@ -136,6 +136,34 @@ Terminal states: `cancelado`, `encerrado`, `nao_convertido`
 - `src/lib/patientPipeline.ts`: State machine (pure logic, no deps)
 - `src/lib/keywordCheck.ts`: Clinical alert detection (25+ keywords)
 
+## Required Setup Steps
+
+### 1. Register JWT Custom Hook in Supabase Dashboard
+This is MANDATORY for multi-tenancy to work:
+
+1. Go to **Supabase Dashboard** → Project → **Authentication** → **Hooks**
+2. Click **+ New hook**
+3. Select **Custom Access Token** event
+4. Function name: `auth.custom_access_token_hook`
+5. Save
+
+The hook will inject `org_id` and `role` from profiles table into JWT app_metadata.
+
+### 2. Test Complete Flow
+- Register new user → `/register`
+- Login → auto redirect to `/onboarding`
+- Enter clinic name → creates organization
+- Dashboard redirects with org_id in JWT
+
+### 3. Verify org_id in JWT
+After login, check browser DevTools:
+```javascript
+// In Console:
+const session = await supabase.auth.getSession();
+console.log(session.data.session.user.app_metadata);
+// Should show: { org_id: "...", role: "admin" }
+```
+
 ## Conventions
 
 - No comments in code unless explicitly requested
@@ -146,4 +174,5 @@ Terminal states: `cancelado`, `encerrado`, `nao_convertido`
 - All new tables must have RLS enabled with restrictive policies
 - Use `maybeSingle()` instead of `single()` for Supabase queries
 - All stores check `useAuthStore.getState().orgId` before INSERT
+- All data tables MUST have `org_id` column scoped to RLS
 - Language: Portuguese (Brazilian) for UI labels

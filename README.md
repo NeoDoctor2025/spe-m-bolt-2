@@ -90,6 +90,7 @@ Disponivel na etapa de Classificacao de Risco do wizard:
 | `/login` | Autenticacao com layout split-screen (branding + stats a esquerda, formulario a direita) |
 | `/register` | Cadastro com nome, email, CRM, senha com indicador de forca |
 | `/forgot-password` | Recuperacao de senha com confirmacao visual |
+| `/onboarding` | Criacao de organizacao (clinica) apos primeiro login |
 | `/dashboard` | 4 metricas (pacientes, avaliacoes, pendentes, score medio), tabela de recentes, grafico de distribuicao |
 | `/patients` | Lista paginada (10/pg) com busca por nome/CPF, filtro por classificacao, ordenacao |
 | `/patients/new` | Cadastro com 4 secoes: dados pessoais, contato, endereco (27 estados BR), historico medico |
@@ -102,26 +103,42 @@ Disponivel na etapa de Classificacao de Risco do wizard:
 | `/analytics` | 4 graficos: linha (avaliacoes/mes), pizza (distribuicao), barras (scores/criterio), cards de metricas |
 | `/settings` | Tabs: Perfil (nome, CRM, especialidade, telefone) e Clinica (nome, endereco) |
 | `/help` | FAQ em accordion pesquisavel (6 secoes) + contato de suporte |
+| `/reference` | Cartao de referencia rapida com protocolo completo (10 fases) e keywords criticas para WhatsApp |
 
 ---
 
-## Banco de Dados
+## Banco de Dados - Arquitetura Multi-tenancy
 
-5 tabelas com Row Level Security ativo em todas:
+12 tabelas com Row Level Security ativo em todas (organizacoes + dados):
 
 | Tabela | Descricao | Politica RLS |
 |---|---|---|
-| `profiles` | Perfil do profissional (nome, CRM, especialidade, clinica) | Usuario le/edita apenas o proprio perfil |
-| `patients` | Prontuarios com dados pessoais, endereco, historico medico | CRUD restrito ao dono |
-| `evaluations` | Avaliacoes com status, score, etapa atual | CRUD restrito ao dono |
-| `evaluation_criteria` | Respostas individuais por criterio (upsert via unique constraint) | Leitura/escrita vinculada ao dono da avaliacao |
-| `patient_photos` | Fotos com viewport, URL e anotacoes em JSONB | CRUD restrito ao dono |
+| `organizations` | Clinicas/unidades (nome, CNPJ, timezone) | Usuario le/edita apenas se org_id = current_org_id() |
+| `profiles` | Perfil do profissional com org_id + role | CRUD restrito ao seu org_id |
+| `patients` | Prontuarios com status de workflow (11 estados) | CRUD restrito ao seu org_id |
+| `evaluations` | Avaliacoes SPE-M com score | CRUD restrito ao seu org_id |
+| `evaluation_criteria` | Respostas individuais por criterio | CRUD restrito ao seu org_id |
+| `patient_photos` | Fotos com anotacoes JSONB | CRUD restrito ao seu org_id |
+| `patient_documents` | TCIs, contratos, protocolos | CRUD restrito ao seu org_id |
+| `checklists` | Liberacao cirurgica, OMS, alta anestesica | CRUD restrito ao seu org_id |
+| `checklist_items` | Itens individuais de checklists | CRUD restrito ao seu org_id |
+| `patient_appointments` | Agendamentos pre/pos operatorios | CRUD restrito ao seu org_id |
+| `preop_exams` | Exames solicitados e resultados | CRUD restrito ao seu org_id |
+| `surgical_records` | Registro de cirurgias (tecnica, tempo, complicacoes) | CRUD restrito ao seu org_id |
+| `implant_records` | Implantes cirurgicos (volume, lote, lado) | CRUD restrito ao seu org_id |
+| `satisfaction_surveys` | NPS e feedback pos-operatorio | CRUD restrito ao seu org_id |
 
-**Storage:** Bucket `patient-photos` com path `{user_id}/{patient_id}/{viewport}_{timestamp}.{ext}`
+**Workflow States:** `lead` → `consulta_agendada` → `consulta_realizada` → `decidiu_operar` → `pre_operatorio` → `cirurgia_agendada` → `cirurgia_realizada` → `pos_op_ativo` → `longo_prazo` → `encerrado` (com terminais: `cancelado`, `nao_convertido`)
 
-**Trigger:** `handle_new_user` cria automaticamente um registro em `profiles` ao registrar usuario, puxando `full_name` do metadata.
+**Storage:** Bucket `patient-photos` com path filtrado por org_id (primeiro nivel de pasta)
 
-**Indexes:** `user_id`, `patient_id`, `status`, `classification`, `created_at DESC` nas tabelas relevantes.
+**Funcoes Helper:**
+- `current_org_id()` — extrai org_id do JWT
+- `current_app_role()` — extrai role (admin/doctor/reception) do JWT
+
+**JWT Custom Hook:** `auth.custom_access_token_hook` injeta org_id e role em app_metadata
+
+**Indexes:** `org_id`, `user_id`, `patient_id`, `status`, `classification`, `created_at DESC` em tabelas relevantes.
 
 ---
 
@@ -129,9 +146,15 @@ Disponivel na etapa de Classificacao de Risco do wizard:
 
 | Store | Responsabilidade |
 |---|---|
-| `authStore` | Sessao, perfil, login/registro/logout, reset de senha |
-| `patientStore` | CRUD de pacientes, paginacao, filtros (busca, classificacao, status, ordenacao) |
-| `evaluationStore` | CRUD de avaliacoes, respostas por criterio, navegacao do wizard, calculo de score |
+| `authStore` | Sessao, orgId, role (admin/doctor/reception), perfil, login/registro/logout, reset de senha |
+| `patientStore` | CRUD de pacientes com org_id, paginacao, filtros (busca, classificacao, status, ordenacao) |
+| `evaluationStore` | CRUD de avaliacoes com org_id, respostas por criterio, navegacao do wizard, calculo de score |
+| `checklistStore` | CRUD de checklists (liberacao, OMS, alta) com org_id, gerencia de itens |
+| `documentStore` | CRUD de documentos (TCIs, contratos) com org_id |
+| `surgicalStore` | CRUD de registros cirurgicos e implantes com org_id |
+| `appointmentStore` | CRUD de agendamentos pre/pos operatorios com org_id, geracao de rotina pos-op |
+| `preopExamStore` | CRUD de exames pre-operatorios com org_id, templates por procedimento |
+| `surveyStore` | CRUD de pesquisas de satisfacao NPS com org_id |
 | `themeStore` | Alternancia light/dark, persistencia em localStorage, respeita `prefers-color-scheme` |
 | `uiStore` | Sidebar, toasts (auto-dismiss 4s com animacao de saida) |
 
@@ -188,13 +211,21 @@ src/
 └── App.tsx                         # Rotas protegidas/publicas
 
 supabase/
-└── migrations/                     # 6 migracoes SQL
-    ├── create_profiles_table.sql
-    ├── create_patients_table.sql
-    ├── create_evaluations_table.sql
-    ├── create_patient_photos_table.sql
-    ├── add_evaluation_criteria_unique_constraint.sql
-    └── create_patient_photos_storage_bucket.sql
+├── migrations/                     # 11 migracoes SQL
+│   ├── create_profiles_table.sql
+│   ├── create_patients_table.sql
+│   ├── create_evaluations_table.sql
+│   ├── create_patient_photos_table.sql
+│   ├── add_evaluation_criteria_unique_constraint.sql
+│   ├── create_patient_photos_storage_bucket.sql
+│   ├── add_procedures_and_clinical_workflow.sql
+│   ├── add_foreign_key_indexes.sql
+│   ├── optimize_rls_policies.sql
+│   ├── add_leads_and_bioestimuladores.sql
+│   └── add_organizations_multitenant.sql
+└── functions/
+    └── complete-onboarding/
+        └── index.ts                # Edge Function para criar organizacao e injetar JWT
 ```
 
 ---
@@ -267,6 +298,46 @@ npm run typecheck  # Verificacao de tipos TypeScript
 ```
 
 ---
+
+## Fluxo de Onboarding Multi-tenancy
+
+### 1. Novo Registro
+Usuario se registra via `/register` com email, nome, CRM e senha.
+
+### 2. Redirect para Onboarding
+Apos login (com session mas sem org_id), guard em App.tsx redireciona para `/onboarding`.
+
+### 3. Criacao de Organizacao
+Usuario preenche nome da clinica e chama Edge Function `complete-onboarding` que:
+- Valida JWT do usuario
+- Cria registro em tabela `organizations`
+- Atualiza `profiles` com org_id e role='admin'
+- Retorna sucesso
+
+### 4. JWT Refresh
+Frontend chama `supabase.auth.refreshSession()` para recarregar JWT com org_id + role injetados.
+
+### 5. Acesso ao Dashboard
+Guard verifica se orgId existe e redireciona para `/dashboard`.
+
+### 6. RLS Automatico
+Todas as queries ficam automaticamente filtradas por org_id via funcao `current_org_id()` do banco.
+
+**Setup Manual Necessario:**
+Registre o JWT hook no Dashboard Supabase:
+- Auth → Hooks → Add → Custom Access Token
+- Function: `auth.custom_access_token_hook`
+- Save
+
+## Palavras-chave Criticas para WhatsApp
+
+A pagina `/reference` exibe 25+ palavras-chave que ativam alerta clinico em mensagens de pacientes pos-operatorios:
+
+**Frases:**
+- "não consigo fechar o olho", "inchaço muito grande", "abriu a cirurgia", "perdendo sensação", "febre alta", "dor forte"
+
+**Palavras:**
+- sangramento, sangrando, hematoma, secreção, paralisia, sangue, febre, pus, abertura, hemorragia, desmaio, convulsão, infecção, necrose, cianose, isquemia, choque, taquicardia, falta de ar, taquipneia, pele azulada, hipotensão, edema agudo
 
 ## Idioma
 
