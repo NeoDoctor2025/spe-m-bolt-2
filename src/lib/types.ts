@@ -291,3 +291,11 @@ export interface SatisfactionSurvey {
   created_at: string;
   patient?: Patient;
 }
+
+export type Role = 'admin' | 'doctor' | 'reception';
+export type WorkflowStatus = 'lead' | 'consulta_agendada' | 'consulta_realizada' | 'decidiu_operar' | 'pre_operatorio' | 'cirurgia_agendada' | 'cirurgia_realizada' | 'pos_op_ativo' | 'longo_prazo' | 'encerrado' | 'nao_convertido' | 'cancelado';
+
+export interface OrgContext {
+  orgId: string;
+  role: Role;
+}

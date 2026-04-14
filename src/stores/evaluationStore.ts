@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { useAuthStore } from './authStore';
 import type { Evaluation, EvaluationCriterion } from '../lib/types';
 import { EVALUATION_STEPS, getTotalMaxScore } from '../data/evaluationCriteria';
 
@@ -58,12 +59,16 @@ export const useEvaluationStore = create<EvaluationState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { id: null, error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { id: null, error: 'Organização não encontrada' };
+
     const maxScore = getTotalMaxScore();
     const { data, error } = await supabase
       .from('evaluations')
       .insert({
         patient_id: patientId,
         user_id: user.id,
+        org_id: orgId,
         status: 'Em Andamento',
         total_score: 0,
         max_score: maxScore,

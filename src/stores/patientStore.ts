@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import type { Patient } from '../lib/types';
+import { useAuthStore } from './authStore';
 
 interface PatientFilters {
   search: string;
@@ -101,9 +102,12 @@ export const usePatientStore = create<PatientState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { id: null, error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { id: null, error: 'Organização não encontrada' };
+
     const { data, error } = await supabase
       .from('patients')
-      .insert({ ...patientData, user_id: user.id })
+      .insert({ ...patientData, user_id: user.id, org_id: orgId })
       .select('id')
       .maybeSingle();
 

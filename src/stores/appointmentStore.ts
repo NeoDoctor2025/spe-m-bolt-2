@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { useAuthStore } from './authStore';
 import type { PatientAppointment } from '../lib/types';
 import { addDays, format } from 'date-fns';
 import { POSTOP_FOLLOW_UP_SCHEDULE } from '../data/procedures';
@@ -48,9 +49,12 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { id: null, error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { id: null, error: 'Organização não encontrada' };
+
     const { data, error } = await supabase
       .from('patient_appointments')
-      .insert({ ...appointmentData, user_id: user.id })
+      .insert({ ...appointmentData, user_id: user.id, org_id: orgId })
       .select('id')
       .maybeSingle();
 
@@ -83,9 +87,13 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { error: 'Organização não encontrada' };
+
     const appointments = POSTOP_FOLLOW_UP_SCHEDULE.map((item) => ({
       patient_id: patientId,
       user_id: user.id,
+      org_id: orgId,
       evaluation_id: evaluationId ?? null,
       appointment_type: item.type as PatientAppointment['appointment_type'],
       scheduled_date: format(addDays(surgeryDate, item.days), "yyyy-MM-dd'T'HH:mm:ssxxx"),

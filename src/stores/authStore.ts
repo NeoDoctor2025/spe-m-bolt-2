@@ -9,6 +9,8 @@ interface AuthState {
   user: User | null;
   session: Session | null;
   profile: Profile | null;
+  orgId: string | null;
+  role: 'admin' | 'doctor' | 'reception' | null;
   loading: boolean;
   initialized: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
@@ -24,6 +26,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   session: null,
   profile: null,
+  orgId: null,
+  role: null,
   loading: false,
   initialized: false,
 
@@ -33,7 +37,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        set({ user: session.user, session });
+        const orgId = session.user.app_metadata?.org_id ?? null;
+        const role = session.user.app_metadata?.role ?? null;
+        set({ user: session.user, session, orgId, role });
         await get().fetchProfile();
       }
     } catch {
@@ -47,7 +53,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      set({ user: session?.user ?? null, session });
+      const orgId = session?.user.app_metadata?.org_id ?? null;
+      const role = session?.user.app_metadata?.role ?? null;
+      set({ user: session?.user ?? null, session, orgId, role });
       if (session?.user) {
         (async () => {
           await get().fetchProfile();
@@ -82,7 +90,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   signOut: async () => {
     await supabase.auth.signOut();
-    set({ user: null, session: null, profile: null });
+    set({ user: null, session: null, profile: null, orgId: null, role: null });
   },
 
   resetPassword: async (email) => {
@@ -114,3 +122,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     return { error: null };
   },
 }));
+
+export const useOrgId = () => useAuthStore(s => s.orgId);
+export const useRole = () => useAuthStore(s => s.role);

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { useAuthStore } from './authStore';
 import type { SatisfactionSurvey } from '../lib/types';
 
 interface SurveyState {
@@ -34,9 +35,12 @@ export const useSurveyStore = create<SurveyState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { id: null, error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { id: null, error: 'Organização não encontrada' };
+
     const { data, error } = await supabase
       .from('satisfaction_surveys')
-      .insert({ ...surveyData, user_id: user.id })
+      .insert({ ...surveyData, user_id: user.id, org_id: orgId })
       .select('id')
       .maybeSingle();
 

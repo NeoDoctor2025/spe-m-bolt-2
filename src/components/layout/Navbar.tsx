@@ -16,6 +16,7 @@ import {
   Sun,
   Moon,
   CalendarDays,
+  BookOpen,
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { useThemeStore } from '../../stores/themeStore';
@@ -28,6 +29,7 @@ const navLinks = [
   { to: '/evaluations', label: 'Avaliações', icon: ClipboardList },
   { to: '/photos', label: 'Fotos', icon: Camera },
   { to: '/analytics', label: 'Relatórios', icon: BarChart3 },
+  { to: '/reference', label: 'Referência', icon: BookOpen },
 ];
 
 export function Navbar() {

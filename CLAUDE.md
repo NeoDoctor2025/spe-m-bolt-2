@@ -9,9 +9,14 @@
 
 ## Latest Build Status
 
-✅ **Build Success** - All TypeScript errors resolved
-- Fixed Modal component to support `onClose` and `footer` props
-- Cleaned up unused imports across components
+✅ **SPE-M Upgrade Complete** - Multi-tenancy & Clinical Features
+- Issue 1: Multi-tenancy schema with org_id and JWT custom claims
+- Issue 2: authStore with orgId and role from JWT
+- Issue 3: Onboarding page + Edge Function (complete-onboarding)
+- Issue 4: All stores updated with org_id in INSERTs (9 stores)
+- Issue 5: patientPipeline.ts with workflow state machine
+- Issue 6: keywordCheck.ts with clinical alert detection
+- Issue 7: Reference page with protocol and critical keywords
 - Production build complete without errors
 
 ## Tech Stack
@@ -100,6 +105,37 @@ Dark mode uses Tailwind's `class` strategy (`darkMode: 'class'` in tailwind.conf
 - Auth: email/password via Supabase Auth
 - Environment variables in `.env`: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 
+## Multi-tenancy Architecture
+
+### Core Tables & Columns
+- `organizations`: id, name, cnpj, phone, timezone, active, created_at, updated_at
+- All data tables: +org_id uuid REFERENCES organizations(id)
+- `profiles`: +org_id uuid, +role text ('admin' | 'doctor' | 'reception')
+- `patients`: +workflow_status text (11 states: lead → encerrado)
+
+### RLS Strategy
+- Helper functions: `public.current_org_id()`, `public.current_app_role()`
+- All data policies scoped to `org_id = public.current_org_id()`
+- Storage bucket policies filter by org_id in first folder level
+- JWT custom hook: `auth.custom_access_token_hook` injects org_id and role
+
+### Workflow States
+Pipeline order (SC-04: forward-only):
+`lead` → `consulta_agendada` → `consulta_realizada` → `decidiu_operar` → `pre_operatorio` → `cirurgia_agendada` → `cirurgia_realizada` → `pos_op_ativo` → `longo_prazo` → `encerrado`
+
+Terminal states: `cancelado`, `encerrado`, `nao_convertido`
+
+### Edge Functions
+- `complete-onboarding`: Creates org, links user, injects JWT claims
+  - Deploy: `npx supabase functions deploy complete-onboarding`
+  - Manual setup: Dashboard → Auth → Hooks → Register custom_access_token_hook
+
+### New Pages & Utils
+- `src/pages/Onboarding.tsx`: Org creation form (post-signup)
+- `src/pages/Reference.tsx`: Protocol reference + critical keywords
+- `src/lib/patientPipeline.ts`: State machine (pure logic, no deps)
+- `src/lib/keywordCheck.ts`: Clinical alert detection (25+ keywords)
+
 ## Conventions
 
 - No comments in code unless explicitly requested
@@ -109,4 +145,5 @@ Dark mode uses Tailwind's `class` strategy (`darkMode: 'class'` in tailwind.conf
 - Files should follow single responsibility, stay under ~200-300 lines
 - All new tables must have RLS enabled with restrictive policies
 - Use `maybeSingle()` instead of `single()` for Supabase queries
+- All stores check `useAuthStore.getState().orgId` before INSERT
 - Language: Portuguese (Brazilian) for UI labels

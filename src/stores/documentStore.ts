@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { useAuthStore } from './authStore';
 import type { PatientDocument } from '../lib/types';
 
 interface DocumentState {
@@ -32,9 +33,12 @@ export const useDocumentStore = create<DocumentState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { id: null, error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { id: null, error: 'Organização não encontrada' };
+
     const { data, error } = await supabase
       .from('patient_documents')
-      .insert({ ...docData, user_id: user.id })
+      .insert({ ...docData, user_id: user.id, org_id: orgId })
       .select('id')
       .maybeSingle();
 

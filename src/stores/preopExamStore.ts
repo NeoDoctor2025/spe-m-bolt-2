@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { useAuthStore } from './authStore';
 import type { PreopExam } from '../lib/types';
 import { BASE_PREOP_EXAMS, PROCEDURE_SPECIFIC_EXAMS } from '../data/procedures';
 
@@ -33,9 +34,12 @@ export const usePreopExamStore = create<PreopExamState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { id: null, error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { id: null, error: 'Organização não encontrada' };
+
     const { data, error } = await supabase
       .from('preop_exams')
-      .insert({ ...examData, user_id: user.id })
+      .insert({ ...examData, user_id: user.id, org_id: orgId })
       .select('id')
       .maybeSingle();
 
@@ -68,11 +72,15 @@ export const usePreopExamStore = create<PreopExamState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { error: 'Organização não encontrada' };
+
     const specific = PROCEDURE_SPECIFIC_EXAMS[procedureType] ?? [];
     const allExams = [
       ...BASE_PREOP_EXAMS.map((name) => ({
         patient_id: patientId,
         user_id: user.id,
+        org_id: orgId,
         evaluation_id: evaluationId ?? null,
         exam_name: name,
         exam_type: 'Base' as const,
@@ -85,6 +93,7 @@ export const usePreopExamStore = create<PreopExamState>((set, get) => ({
       ...specific.map((name) => ({
         patient_id: patientId,
         user_id: user.id,
+        org_id: orgId,
         evaluation_id: evaluationId ?? null,
         exam_name: name,
         exam_type: 'Específico do Procedimento' as const,

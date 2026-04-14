@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { useAuthStore } from './authStore';
 import type { Checklist, ChecklistItem, ChecklistType } from '../lib/types';
 import { CHECKLIST_TEMPLATES } from '../data/procedures';
 
@@ -55,9 +56,12 @@ export const useChecklistStore = create<ChecklistState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { id: null, error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { id: null, error: 'Organização não encontrada' };
+
     const { data, error } = await supabase
       .from('checklists')
-      .insert({ ...checklistData, user_id: user.id })
+      .insert({ ...checklistData, user_id: user.id, org_id: orgId })
       .select('id')
       .maybeSingle();
 
@@ -69,6 +73,7 @@ export const useChecklistStore = create<ChecklistState>((set, get) => ({
         const itemsToInsert = template.map((t, i) => ({
           checklist_id: data.id,
           user_id: user.id,
+          org_id: orgId,
           label: t.label,
           is_mandatory: t.item_type === 'Obrigatório CFM',
           is_completed: false,
@@ -126,12 +131,16 @@ export const useChecklistStore = create<ChecklistState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { error: 'Organização não encontrada' };
+
     const cl = get().checklists.find((c) => c.id === checklistId);
     const maxOrder = Math.max(0, ...(cl?.items?.map((i) => i.sort_order) ?? []));
 
     const { error } = await supabase.from('checklist_items').insert({
       checklist_id: checklistId,
       user_id: user.id,
+      org_id: orgId,
       label,
       item_type,
       is_mandatory: item_type === 'Obrigatório CFM',

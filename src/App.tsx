@@ -8,6 +8,7 @@ import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
+import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Patients from './pages/Patients';
 import PatientForm from './pages/PatientForm';
@@ -18,10 +19,11 @@ import Photos from './pages/Photos';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
+import Reference from './pages/Reference';
 import Appointments from './pages/Appointments';
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { session, initialized } = useAuthStore();
+function ProtectedRoute({ children, requireOrg = true }: { children: React.ReactNode; requireOrg?: boolean }) {
+  const { session, orgId, initialized } = useAuthStore();
 
   if (!initialized) {
     return (
@@ -32,6 +34,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!session) return <Navigate to="/login" replace />;
+  if (requireOrg && session && !orgId) return <Navigate to="/onboarding" replace />;
   return <>{children}</>;
 }
 
@@ -85,6 +88,14 @@ export default function App() {
             </PublicRoute>
           }
         />
+        <Route
+          path="/onboarding"
+          element={
+            <ProtectedRoute requireOrg={false}>
+              <Onboarding />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           element={
@@ -106,6 +117,7 @@ export default function App() {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/reference" element={<Reference />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />

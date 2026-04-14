@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { useAuthStore } from './authStore';
 import type { SurgicalRecord, ImplantRecord } from '../lib/types';
 
 interface SurgicalState {
@@ -49,9 +50,12 @@ export const useSurgicalStore = create<SurgicalState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { id: null, error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { id: null, error: 'Organização não encontrada' };
+
     const { data, error } = await supabase
       .from('surgical_records')
-      .insert({ ...recordData, user_id: user.id })
+      .insert({ ...recordData, user_id: user.id, org_id: orgId })
       .select('id')
       .maybeSingle();
 
@@ -84,9 +88,12 @@ export const useSurgicalStore = create<SurgicalState>((set, get) => ({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return { id: null, error: 'Não autenticado' };
 
+    const orgId = useAuthStore.getState().orgId;
+    if (!orgId) return { id: null, error: 'Organização não encontrada' };
+
     const { data, error } = await supabase
       .from('implant_records')
-      .insert({ ...implantData, user_id: user.id })
+      .insert({ ...implantData, user_id: user.id, org_id: orgId })
       .select('id')
       .maybeSingle();
 
